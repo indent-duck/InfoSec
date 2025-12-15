@@ -1,0 +1,89 @@
+.submission-container {
+  padding: 20px;
+}
+
+.submission-card {
+  width: 70%;
+  margin: 50px auto;
+  padding: 40px;
+  border: 1px solid #cbb;
+  border-radius: 20px;
+}
+
+.submission-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+  padding: 15px;
+  border: 1px solid #cbb;
+  resize: none;
+  font-size: 16px;
+}
+
+.submit-btn {
+  display: block;
+  margin: 30px auto 0;
+  padding: 12px 40px;
+  background: #555;
+  color: white;
+  border: none;
+  border-radius: 10px;
+}
+
+.back-btn {
+  display: block;
+  margin: 40px auto;
+  padding: 12px 40px;
+  background: #555;
+  color: white;
+  border-radius: 10px;
+  border: none;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  width: 60%;
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
+.cancel-btn {
+  background: #666;
+  color: white;
+  padding: 12px 40px;
+  border-radius: 10px;
+  border: none;
+}
+
+.confirm-btn {
+  background: #3fd14a;
+  color: white;
+  padding: 12px 40px;
+  border-radius: 10px;
+  border: none;
+}
