@@ -5,7 +5,7 @@
   height: 100vh;
 }
 
-.loginContainer {
+.FormContainer {
   margin-top: 10vh;
   width: 40%;
   display: flex;
@@ -15,7 +15,7 @@
   text-align: center;
 }
 
-.loginForm {
+.Form {
   border: 1px solid black;
   width: 80%;
   border-radius: 10px;
@@ -58,7 +58,7 @@
   cursor: pointer;
 }
 
-.signup {
+.login {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -72,5 +72,19 @@
 }
 
 .highlight:hover {
+  cursor: pointer;
+}
+
+.checkbox_container {
+  font-size: small;
+  margin-top: 20px;
+}
+
+.checkbox {
+  vertical-align: middle;
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
+  accent-color: #050505; /* sets the checkmark color */
   cursor: pointer;
 }

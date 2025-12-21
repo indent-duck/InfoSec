@@ -3,6 +3,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/login/LoginPage";
 import Home from "./pages/user/Home";
 import Submission from "./pages/user/Submission";
+import SignupRoutes from "./pages/sign_up/SignupRoutes";
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/signup/*" element={<SignupRoutes />} />
       </Routes>
     </BrowserRouter>
   );

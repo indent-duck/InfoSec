@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./login.module.css";
 
@@ -45,7 +46,9 @@ function LoginPage() {
           </button>
           <div className={styles.signup}>
             <p>Don't have an account?</p>
-            <p className={styles.highlight}>Sign up</p>
+            <Link to="/signup/email" className={styles.highlight}>
+              Sign up
+            </Link>
           </div>
         </form>
       </div>
