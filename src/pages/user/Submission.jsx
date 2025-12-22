@@ -11,15 +11,17 @@ export default function Submission() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
 
-  const handleConfirmSubmit = () => {
-    // encryption + API call later
-
-    // Simulate token invalidation
-    login({
-      ...user,
-      tokenCount: 0,
+  const handleConfirmSubmit = async () => {
+    await fetch("http://localhost:5000/api/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        tokenId: "TEMP-TOKEN-123", // later from backend
+      }),
     });
 
+    login({ ...user, tokenCount: 0 });
     setShowConfirm(false);
     setShowSuccess(true);
   };
