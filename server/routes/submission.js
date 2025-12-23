@@ -28,4 +28,21 @@ router.post("/submit", (req, res) => {
   });
 });
 
+router.get("/submissions", (req, res) => {
+  const sql = `
+    SELECT id, encrypted_message, iv, created_at
+    FROM submissions
+    ORDER BY created_at DESC
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("DB ERROR:", err);
+      return res.status(500).json({ error: err.message });
+    }
+
+    res.json(results);
+  });
+});
+
 export default router;
