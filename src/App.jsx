@@ -32,7 +32,7 @@ function App() {
         <Route path="/admin" element={<HomeAdmin />} />
         <Route path="/admin/submission" element={<DataAdminSub />} />
         <Route path="admin/review" element={<DataAdminRev />} />
-
+        
         <Route path="/signup/*" element={<SignupRoutes />} />
       </Routes>
     </BrowserRouter>

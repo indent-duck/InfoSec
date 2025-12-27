@@ -1,7 +1,7 @@
 .wholetable{
     width:100%;
     border-collapse: collapse;
-
+    
 }
 .table_head th {
   background-color: lightgrey;

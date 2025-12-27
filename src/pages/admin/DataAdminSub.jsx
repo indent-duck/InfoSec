@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SubmissionTable from "../../components/SubmissionTable";
-import Style from "./DataAdmin.module.css";
-import Table from "../../components/Table.jsx";
+import Style from "./DataAdminSub.module.css";
+
 
 const DataAdminSub = () => {
   const [search, setSearch] = useState("");
