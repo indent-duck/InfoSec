@@ -1,0 +1,86 @@
+.home_container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.home_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile_circle {
+  width: 50px;
+  height: 50px;
+  background: #ddd;
+  border-radius: 50%;
+}
+
+.body_card {
+  margin: 10px auto;
+  width: 60%;
+  border: 1px solid #cbb;
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.btn_container {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  width: 100%;
+  margin: 10px 0px;
+}
+
+.btn {
+  flex: 1;
+  margin: 0;
+  background: #444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  max-height: 40px;
+  transition: all 0.3 ease;
+}
+
+.btn_active {
+  background-color: #0e7a0c;
+  color: white;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.btn_inactive {
+  background-color: #777;
+  color: white;
+  font-size: 14px;
+  padding: 8px;
+  transform: scale(0.98);
+}
+
+.btn_active:hover {
+  background-color: #0b5d09;
+}
+
+.btn_inactive:hover {
+  background-color: #666;
+}
+
+.submit_btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.warning {
+  text-align: center;
+  margin-top: 15px;
+  color: red;
+}
+
+.cards_container {
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+  gap: 10px;
+}

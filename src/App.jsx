@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/login/LoginPage";
 import Home from "./pages/user/Home";
+import HomeAdmin from "./pages/admin/Home";
 import Submission from "./pages/user/Submission";
 import SignupRoutes from "./pages/sign_up/SignupRoutes";
 
@@ -10,7 +11,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-
         <Route
           path="/home"
           element={
@@ -19,7 +19,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/submit"
           element={
@@ -28,7 +27,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        {/* protected route for admin to be added later */}
+        <Route path="/admin" element={<HomeAdmin />} />
         <Route path="/signup/*" element={<SignupRoutes />} />
       </Routes>
     </BrowserRouter>
