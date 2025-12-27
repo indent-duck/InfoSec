@@ -1,0 +1,21 @@
+.container {
+  border: 1px solid #bdafaf;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  padding: 10px;
+  max-height: 90px;
+}
+
+.number {
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.subtitle {
+  margin-top: 10px;
+  font-size: 16px;
+}

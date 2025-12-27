@@ -1,0 +1,20 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table_head th {
+  background-color: #f4f4f4;
+  color: #333;
+  font-weight: bold;
+  padding: 12px;
+  border-bottom: 2px solid #ccc;
+  text-align: left;
+}
+
+.table_body td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #555;
+}
