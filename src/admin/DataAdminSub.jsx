@@ -1,6 +1,6 @@
 import { useState } from "react";
 import SubmissionTable from "../components/SubmissionTable";
-
+import Style from "./DataAdmin.module.css";
 const DataAdminSub = () => {
   const [search, setSearch] = useState("");
 
@@ -13,28 +13,27 @@ const DataAdminSub = () => {
   ];
 
   const filtered = submissions.filter(subs =>
-    subs.id.includes(search) 
+    subs.id.includes(search)
   );
 
   return (
-    <div className="admin-container">
+    <div>
       <h2>WebName</h2>
-      <p><b>Total Submissions:</b> {submissions.length}</p>
+      <p className={Style.Totalsub}>Total Submissions:{submissions.length}</p>
+      <div className={Style.searchbar}>
 
-      {/* Controls */}
-      <div className="controls">
-        <input
+        <input className={Style.idle}
           type="text"
           placeholder="Search Submissions"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button>Filter</button>
-        <button className="btn-dark">Search</button>
-        <button className="btn-clear" onClick={() => setSearch("")}>
-          Clear
-        </button>
+
+        <button className={Style.buttonngfilter}>Filter</button>
+        <button className={Style.buttonngsearch}>Search</button>
+        <button className={Style.buttonngclear} onClick={() => setSearch("")}> Clear </button>
       </div>
+
 
       {/* Table */}
       <SubmissionTable data={filtered} />

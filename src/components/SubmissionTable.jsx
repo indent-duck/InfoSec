@@ -1,6 +1,7 @@
+import Style from "./SubmissionTable.module.css";
 const SubmissionTable = ({ data }) => {
   return (
-    <table className="submission-table">
+    <table className={Style.wholetable}>
       <thead>
         <tr>
           <th>ID</th>
