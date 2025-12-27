@@ -84,3 +84,13 @@
   align-self: center;
   gap: 10px;
 }
+
+.table_container {
+  margin-top: 20px;
+}
+
+.cards_container {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
