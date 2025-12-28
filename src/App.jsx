@@ -5,6 +5,7 @@ import Home from "./pages/user/Home";
 import HomeAdmin from "./pages/admin/Home";
 import Submission from "./pages/user/Submission";
 import SignupRoutes from "./pages/sign_up/SignupRoutes";
+import CreateForm from "./pages/admin/Form";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         />
         {/* protected route for admin to be added later */}
         <Route path="/admin" element={<HomeAdmin />} />
+        <Route path="/admin/forms/create" element={<CreateForm />} />
         <Route path="/signup/*" element={<SignupRoutes />} />
       </Routes>
     </BrowserRouter>
