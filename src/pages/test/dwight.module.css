@@ -1,0 +1,78 @@
+.home_container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.home_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile_circle {
+  width: 50px;
+  height: 50px;
+  background: #ddd;
+  border-radius: 50%;
+}
+
+.body_card {
+  margin: 10px auto;
+  width: 60%;
+  border: 1px solid #cbb;
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.options_container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.searchbar {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.searchbar input {
+  width: 100%;
+  background-color: #eaeaea;
+  border: 1px solid #bdafaf;
+  flex: 1;
+  height: 30px;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.btn_container {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-left: 10px;
+}
+
+.btn {
+  flex: 1;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.clear {
+  border: 1px solid red;
+  color: red;
+  background-color: white;
+}
+
+.search {
+  border: 1px solid black;
+  color: white;
+  background-color: black;
+}
+
+.filter {
+  border: 1px solid grey;
+  background-color: white;
+}
