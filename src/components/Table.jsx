@@ -1,4 +1,4 @@
-import styles from "./table.module.css";
+import styles from "./modules/table.module.css";
 
 export default function Table() {
   return (
