@@ -23,6 +23,8 @@
     width:60%;
     margin:0 auto;
     border-radius: 15px;
+    overflow:hidden;
+    text-overflow: ellipse;
 }
 .TotalSubmissions{
     padding:5px;

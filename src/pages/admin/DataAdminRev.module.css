@@ -23,6 +23,7 @@
     width:60%;
     margin:0 auto;
     border-radius: 15px;
+    
 }
 .total_container {
     display:flex;
@@ -34,8 +35,7 @@
 }
 .review {
     font-size: 18px;
-    font-weight:bold;
-    padding:5px;
+    font-weight:bold;   
     display:flex;
     justify-content: center;
   
@@ -45,6 +45,11 @@
     border-radius: 8px;
     justify-content: center;
     display:flex;    
+    border:1px solid black
+}
+.btn_generate button {
+    width: 100%;
+    justify-content: center
 }
 
 .sort_con{

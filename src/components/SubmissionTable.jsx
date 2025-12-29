@@ -2,18 +2,22 @@ import Style from "./SubmissionTable.module.css";
 const SubmissionTable = ({ data }) => {
   return (
     <table className={Style.wholetable}>
-       <colgroup>
+      <colgroup>
+        <col Style={{ width: "15%" }} />
         <col Style={{ width: "20%" }} />
-        <col Style={{ width: "40%" }} />
         <col Style={{ width: "20%" }} />
         <col Style={{ width: "20%" }} />
+        <col Style={{ width: "15%" }} />
+        <col Style={{ width: "15%" }} />
       </colgroup>
       <thead className={Style.table_head}>
         <tr>
-          <th>ID</th>
-          <th>Encrypted Message</th>
-          <th>Date</th>
-          <th>Action</th>
+          <th>Submision ID</th>
+          <th>Form Title</th>
+          <th>Email</th>
+          <th>Submitted At</th>
+          <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody className={Style.table_body}>
@@ -25,7 +29,7 @@ const SubmissionTable = ({ data }) => {
             <td>
               <button className={Style.link_btn}>View</button>
             </td>
-            
+
           </tr>
         ))}
       </tbody>

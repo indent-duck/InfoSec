@@ -15,9 +15,7 @@ const DataAdminRev = () => {
                     <div className={Style.review}>
                         <p>Review Submissions: 1000</p>
                     </div>
-                    <div className={Style.btn_generate}>
-                        <button> Generate Report</button>
-                    </div>
+                   
                 </div>
                 <div className={Style.sort_con}>
                     <div className={Style.search_bar}>
