@@ -1,16 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import styles from "./signup.module.css";
+import styles from "./modules/emailstep.module.css";
 
 export default function SignUp() {
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // send verification code to user email
 
-    navigate("/signup/verify");
+    navigate("/signup/verify", { state: { email } });
   };
 
   return (
@@ -24,6 +25,8 @@ export default function SignUp() {
               className={styles.textField}
               type="text"
               placeholder="Enter your Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <button className={styles.button} type="submit">

@@ -1,23 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { jwtDecode } from "jwt-decode";
 import styles from "./login.module.css";
 
 function LoginPage() {
   const auth = useAuth();
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  const handleSubmit = (e) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // TEMP: fake login
-    auth.login({
-      role: "user",
-      tokenCount: 1, // one-time token per period
-    });
+    if (!email.includes("@")) {
+      setError("Please enter a valid email address");
+      return;
+    }
 
-    navigate("/home");
+    try {
+      const response = await fetch(`${API_URL}/api/accounts/login`, {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Login Failed");
+      }
+      localStorage.setItem("token", data.token);
+      auth.login({ token: data.token });
+
+      const decoded = jwtDecode(data.token);
+      if (decoded.role === "admin") {
+        navigate("/admin/home");
+      } else {
+        navigate("/home");
+      }
+    } catch (err) {
+      setError("Server error: " + err.message);
+    }
   };
 
   return (
@@ -31,6 +58,9 @@ function LoginPage() {
               className={styles.textField}
               type="text"
               placeholder="Enter your Email Address"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className={styles.inputField}>
@@ -39,8 +69,12 @@ function LoginPage() {
               className={styles.textField}
               type="password"
               placeholder="Enter your password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <p className={styles.errorMessage}>{error}</p>
           <button className={styles.button} type="submit">
             Log In
           </button>

@@ -27,6 +27,15 @@ export default function CreateForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("submit clicked");
+
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    console.log("API_URL:", API_URL);
+
+    if (new Date(expiresAt) <= new Date()) {
+      alert("Invalid expiration date, Please select a future date.");
+      return;
+    }
 
     const payload = {
       title,
@@ -36,10 +45,36 @@ export default function CreateForm() {
       questions: questions.map((q) => ({ text: q })),
     };
 
-    console.log("FORM DATA:", payload);
-
-    // TODO: POST to backend later
-    navigate("/admin");
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Token:", token ? "Present" : "Missing");
+      
+      const response = await fetch(
+        `${API_URL}/api/forms`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+      
+      console.log("Response status:", response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log("Error response:", errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      const data = await response.json();
+      console.log("Form created", data);
+      navigate("/admin");
+    } catch (err) {
+      console.error("Error creating form: ", err);
+    }
   };
 
   return (
@@ -48,7 +83,11 @@ export default function CreateForm() {
 
       <form className={styles.form} onSubmit={handleSubmit}>
         <label>Title</label>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
 
         <label>Description</label>
         <textarea
@@ -88,11 +127,7 @@ export default function CreateForm() {
           </div>
         ))}
 
-        <button
-          type="button"
-          className={styles.addBtn}
-          onClick={addQuestion}
-        >
+        <button type="button" className={styles.addBtn} onClick={addQuestion}>
           + Add Question
         </button>
 

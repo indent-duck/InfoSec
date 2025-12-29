@@ -1,4 +1,4 @@
-import styles from "./modules/Circle.module.css";
+import styles from "./modules/circle.module.css";
 
 export default function Circle({ CurrentStep, StepNo, Subtitle }) {
   // decides the circle color based on current step
