@@ -21,7 +21,7 @@ function App() {
           }
         />
         <Route
-          path="/submit"
+          path="/submit/:formId"
           element={
             <ProtectedRoute>
               <Submission />
@@ -29,7 +29,7 @@ function App() {
           }
         />
         {/* protected route for admin to be added later */}
-        <Route path="/admin" element={<HomeAdmin />} />
+        <Route path="/admin/home" element={<HomeAdmin />} />
         <Route path="/admin/forms/create" element={<CreateForm />} />
         <Route path="/signup/*" element={<SignupRoutes />} />
       </Routes>
