@@ -71,7 +71,7 @@ export default function CreateForm() {
       
       const data = await response.json();
       console.log("Form created", data);
-      navigate("/admin");
+      navigate("/admin/home");
     } catch (err) {
       console.error("Error creating form: ", err);
     }
@@ -132,7 +132,7 @@ export default function CreateForm() {
         </button>
 
         <div className={styles.actions}>
-          <button type="button" onClick={() => navigate("/admin")}>
+          <button type="button" onClick={() => navigate("/admin/home")}>
             Cancel
           </button>
           <button type="submit">Create Form</button>
