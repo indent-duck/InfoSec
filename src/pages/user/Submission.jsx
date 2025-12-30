@@ -1,34 +1,46 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./submission.css";
 
 export default function Submission() {
   const navigate = useNavigate();
-  const { user, login } = useAuth();
+  const location = useLocation();
 
+  const { formId, title } = location.state || {};
+
+  // 🔹 Placeholder questions per form
+  const questionBank = {
+    "01111": [
+      "How satisfied are you with the system?",
+      "Was the interface easy to use?",
+      "What can be improved?",
+    ],
+    "01110": [
+      "How would you rate the service?",
+      "Was your concern addressed properly?",
+      "Any additional feedback?",
+    ],
+  };
+
+  const questions =
+    questionBank[formId] || [
+      "How was your experience?",
+      "What did you like?",
+      "What should be improved?",
+    ];
+
+  const [answers, setAnswers] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-
-  // 🔹 Placeholder questions (TEMPORARY)
-  const placeholderQuestions = [
-    "How satisfied are you with the system?",
-    "What features did you find useful?",
-    "What can be improved?",
-  ];
-
-  // Store answers per question
-  const [answers, setAnswers] = useState({});
 
   const handleChange = (index, value) => {
     setAnswers({ ...answers, [index]: value });
   };
 
-  const isFormValid = placeholderQuestions.every(
+  const isFormValid = questions.every(
     (_, index) => answers[index]?.trim()
   );
 
-  // TEMP submit handler (no backend yet)
   const handleConfirmSubmit = () => {
     setShowConfirm(false);
     setShowSuccess(true);
@@ -44,15 +56,17 @@ export default function Submission() {
 
       {/* Form Card */}
       <div className="submission-card">
-        <h2 className="submission-title">Evaluation Form</h2>
+        <h2 className="submission-title">
+          {title || "Evaluation Form"}
+        </h2>
+
         <p className="submission-subtitle">
           Please answer the questions below.
         </p>
 
-        {/* Google Forms–style questions */}
-        {placeholderQuestions.map((question, index) => (
+        {questions.map((question, index) => (
           <div className="question-block" key={index}>
-            <label className="question-label"> 
+            <label className="question-label">
               {index + 1}. {question}
             </label>
 
@@ -82,7 +96,7 @@ export default function Submission() {
       {showConfirm && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Are you sure you want to submit your evaluation?</h2>
+            <h2>Are you sure you want to submit?</h2>
 
             <div className="modal-actions">
               <button
@@ -106,7 +120,6 @@ export default function Submission() {
       {showSuccess && (
         <div className="modal-overlay">
           <div className="modal">
-            <img src="check.png" alt="Success" />
             <h2>Submission Successful</h2>
             <p>Your evaluation has been securely submitted.</p>
 
