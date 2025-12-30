@@ -1,5 +1,5 @@
 import ReviewTable from "../../components/ReviewTable";
-import Style from "./DataAdminRev.module.css";
+import Style from "./modules/DataAdminRev.module.css";
 
 
 const DataAdminRev = () => {

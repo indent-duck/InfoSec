@@ -5,15 +5,19 @@ import Home from "./pages/user/Home";
 import HomeAdmin from "./pages/admin/Home";
 import Submission from "./pages/user/Submission";
 import SignupRoutes from "./pages/sign_up/SignupRoutes";
+import CreateForm from "./pages/admin/Form.jsx";
+
+import Test from "./pages/test/test.jsx";
 
 function App() {
+  console.log("App component loaded");
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route
           path="/home"
-          element={ 
+          element={
             <ProtectedRoute>
               <Home />
             </ProtectedRoute>
@@ -31,6 +35,8 @@ function App() {
         <Route path="/admin/home" element={<HomeAdmin />} />
         <Route path="/admin/forms/create" element={<CreateForm />} />
         <Route path="/signup/*" element={<SignupRoutes />} />
+        {/* test route */}
+        <Route path="/test" element={<Test />} />
       </Routes>
     </BrowserRouter>
   );
