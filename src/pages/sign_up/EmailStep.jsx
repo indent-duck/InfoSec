@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import styles from "./signup.module.css";
+import axios from "axios";
+import styles from "./modules/emailstep.module.css";
 
 export default function SignUp() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    // send verification code to user email
-
-    navigate("/signup/verify");
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/accounts/send-otp`, {
+        email
+      });
+      navigate("/signup/verify", { state: { email } });
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to send OTP");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -22,12 +36,17 @@ export default function SignUp() {
             <label>Email address:</label>
             <input
               className={styles.textField}
-              type="text"
+              type="email"
+              name="email"
               placeholder="Enter your Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
-          <button className={styles.button} type="submit">
-            Sign Up
+          {error && <div style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
+          <button className={styles.button} type="submit" disabled={loading}>
+            {loading ? "Sending..." : "Sign Up"}
           </button>
           <div className={styles.checkbox_container}>
             <label>

@@ -4,24 +4,32 @@ import { useAuth } from "../../context/AuthContext";
 import "./submission.css";
 
 export default function Submission() {
-  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+  const { user, login } = useAuth();
+
   const [showConfirm, setShowConfirm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const { user, login } = useAuth();
-  const navigate = useNavigate();
+  // 🔹 Placeholder questions (TEMPORARY)
+  const placeholderQuestions = [
+    "How satisfied are you with the system?",
+    "What features did you find useful?",
+    "What can be improved?",
+  ];
 
-  const handleConfirmSubmit = async () => {
-    await fetch("http://localhost:5000/api/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message,
-        tokenId: "TEMP-TOKEN-123", // later from backend
-      }),
-    });
+  // Store answers per question
+  const [answers, setAnswers] = useState({});
 
-    login({ ...user, tokenCount: 0 });
+  const handleChange = (index, value) => {
+    setAnswers({ ...answers, [index]: value });
+  };
+
+  const isFormValid = placeholderQuestions.every(
+    (_, index) => answers[index]?.trim()
+  );
+
+  // TEMP submit handler (no backend yet)
+  const handleConfirmSubmit = () => {
     setShowConfirm(false);
     setShowSuccess(true);
   };
@@ -34,19 +42,32 @@ export default function Submission() {
         <div className="profile-circle"></div>
       </header>
 
-      {/* Submission Box */}
+      {/* Form Card */}
       <div className="submission-card">
-        <h2 className="submission-title">Submission Page</h2>
+        <h2 className="submission-title">Evaluation Form</h2>
+        <p className="submission-subtitle">
+          Please answer the questions below.
+        </p>
 
-        <textarea
-          placeholder="Write your submission / evaluation here"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
+        {/* Google Forms–style questions */}
+        {placeholderQuestions.map((question, index) => (
+          <div className="question-block" key={index}>
+            <label className="question-label"> 
+              {index + 1}. {question}
+            </label>
+
+            <textarea
+              className="answer-input"
+              placeholder="Your answer"
+              value={answers[index] || ""}
+              onChange={(e) => handleChange(index, e.target.value)}
+            />
+          </div>
+        ))}
 
         <button
           className="submit-btn"
-          disabled={!message.trim()}
+          disabled={!isFormValid}
           onClick={() => setShowConfirm(true)}
         >
           Submit
@@ -85,7 +106,7 @@ export default function Submission() {
       {showSuccess && (
         <div className="modal-overlay">
           <div className="modal">
-            <img src="check.png"></img>
+            <img src="check.png" alt="Success" />
             <h2>Submission Successful</h2>
             <p>Your evaluation has been securely submitted.</p>
 

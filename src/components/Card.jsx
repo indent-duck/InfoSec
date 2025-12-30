@@ -1,4 +1,4 @@
-import styles from "./card.module.css";
+import styles from "./modules/card.module.css";
 
 export default function Card({ Number, Subtitle, TextColor }) {
   return (

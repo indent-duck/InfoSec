@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import SignupCounter from "../../components/SignupCounter";
-import styles from "./signupSteps.module.css";
+import styles from "./modules/wrapper.module.css";
 
 export default function DoneStep() {
   const auth = useAuth();

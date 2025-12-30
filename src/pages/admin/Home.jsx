@@ -1,52 +1,82 @@
-import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./home.module.css";
-import Card from "../../components/Card.jsx";
-import Table from "../../components/Table.jsx";
+import Card from "../../components/Card";
+
+import AllSubmissionsTable from "./AllSubmissionsTable";
+import ReviewedSubmissionsTable from "./ReviewedSubmissionsTable";
 
 export default function HomeAdmin() {
-  const [btnStatus1, setbtnStatus1] = useState("btn_active");
-  const [btnStatus2, setbtnStatus2] = useState("btn_inactive");
+  const [activeTab, setActiveTab] = useState("all");
+  const navigate = useNavigate();
 
-  const handleClick1 = () => {
-    setbtnStatus1("btn_active");
-    setbtnStatus2("btn_inactive");
-  };
+  const allSubmissions = [
+    { id: "01111", encrypted: "5f7a9c1d0a", date: "2025-07-16" },
+    { id: "01110", encrypted: "5f7a9c1d0a", date: "2025-07-14" },
+  ];
 
-  const handleClick2 = () => {
-    setbtnStatus1("btn_inactive");
-    setbtnStatus2("btn_active");
-  };
+  const reviewedSubmissions = [
+    {
+      id: "01111",
+      plaintext: "Plaintext message",
+      date: "2025-07-16",
+      admin: "admin_name",
+    },
+  ];
 
   return (
     <div className={styles.home_container}>
       <header className={styles.home_header}>
         <h1>WebName</h1>
-        <div className={styles.profile_circle}></div>
+
+        {/* RIGHT SIDE */}
+        <div className={styles.header_actions}>
+          <button
+            className={styles.create_btn}
+            onClick={() => navigate("/admin/forms/create")}
+          >
+            + Create Form
+          </button>
+          <div className={styles.profile_circle}></div>
+        </div>
       </header>
 
       <div className={styles.body_card}>
         <div className={styles.cards_container}>
-          <Card Number={123} Subtitle={"subtitle"} TextColor={"#2729AC"} />
-          <Card Number={123} Subtitle={"subtitle"} TextColor={"#348FDF"} />
-          <Card Number={123} Subtitle={"subtitle"} TextColor={"#15A810"} />
+          <Card Number={123} Subtitle="Total Submissions" TextColor="#2729AC" />
+          <Card Number={123} Subtitle="Remaining Tokens" TextColor="#348FDF" />
+          <Card Number={123} Subtitle="Reviewed" TextColor="#15A810" />
         </div>
+
         <div className={styles.btn_container}>
           <button
-            className={`${styles.btn} ${styles[btnStatus1]}`}
-            onClick={handleClick1}
+            className={`${styles.btn} ${
+              activeTab === "all" ? styles.btn_active : styles.btn_inactive
+            }`}
+            onClick={() => setActiveTab("all")}
           >
-            All Submission
+            All Submissions
           </button>
+
           <button
-            className={`${styles.btn} ${styles[btnStatus2]}`}
-            onClick={handleClick2}
+            className={`${styles.btn} ${
+              activeTab === "reviewed"
+                ? styles.btn_active
+                : styles.btn_inactive
+            }`}
+            onClick={() => setActiveTab("reviewed")}
           >
-            Reviwed Submission
+            Reviewed Submissions
           </button>
         </div>
-        <div className={styles.table}>
-          <Table />
+
+        <div className={styles.table_container}>
+          {activeTab === "all" && (
+            <AllSubmissionsTable submissions={allSubmissions} />
+          )}
+          {activeTab === "reviewed" && (
+            <ReviewedSubmissionsTable reviews={reviewedSubmissions} />
+          )}
         </div>
       </div>
     </div>
