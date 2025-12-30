@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./home.module.css";
+import styles from "./modules/home.module.css";
 import Card from "../../components/Card";
 
 import AllSubmissionsTable from "./AllSubmissionsTable";

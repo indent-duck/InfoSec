@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import styles from "./dwight.module.css";
+import styles from "./test.module.css";
 import Card from "../../components/Card.jsx";
 import Table from "../../components/Table.jsx";
 

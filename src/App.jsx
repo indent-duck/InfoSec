@@ -5,7 +5,7 @@ import Home from "./pages/user/Home";
 import HomeAdmin from "./pages/admin/Home";
 import Submission from "./pages/user/Submission";
 import SignupRoutes from "./pages/sign_up/SignupRoutes";
-import CreateForm from "./pages/admin/Form"
+import CreateForm from "./pages/admin/Form.jsx"
 
 function App() {
   return (

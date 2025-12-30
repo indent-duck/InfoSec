@@ -1,6 +1,6 @@
 import { useState } from "react";
 import SubmissionTable from "../../components/SubmissionTable";
-import Style from "./DataAdminSub.module.css";
+import Style from "./modules/DataAdminSub.module.css";
 
 
 const DataAdminSub = () => {

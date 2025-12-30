@@ -1,4 +1,4 @@
-import styles from "./adminTable.module.css";
+import styles from "./modules/adminTable.module.css";
 
 export default function AllSubmissionsTable({ submissions }) {
   return (
