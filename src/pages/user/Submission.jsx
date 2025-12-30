@@ -1,33 +1,47 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import "./submission.css";
 
 export default function Submission() {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const { formId, title } = location.state || {};
+  const { formId } = useParams();
+  const [form, setForm] = useState(null);
 
-  // 🔹 Placeholder questions per form
-  const questionBank = {
-    "01111": [
-      "How satisfied are you with the system?",
-      "Was the interface easy to use?",
-      "What can be improved?",
-    ],
-    "01110": [
-      "How would you rate the service?",
-      "Was your concern addressed properly?",
-      "Any additional feedback?",
-    ],
-  };
-
-  const questions =
-    questionBank[formId] || [
-      "How was your experience?",
-      "What did you like?",
-      "What should be improved?",
-    ];
+  useEffect(() => {
+    const fetchForm = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        console.log("Fetching form with ID:", formId);
+        console.log("API URL:", API_URL);
+        console.log("Token:", token ? "Present" : "Missing");
+        
+        const response = await fetch(
+          `${API_URL}/api/forms/${formId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        
+        console.log("Response status:", response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.log("Error response:", errorText);
+          throw new Error("Failed to fetch form data");
+        }
+        const data = await response.json();
+        console.log("Form data:", data);
+        setForm(data);
+      } catch (err) {
+        console.error("Error fetching form: ", err);
+      }
+    };
+    fetchForm();
+  }, [formId]);
 
   const [answers, setAnswers] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
@@ -37,8 +51,8 @@ export default function Submission() {
     setAnswers({ ...answers, [index]: value });
   };
 
-  const isFormValid = questions.every(
-    (_, index) => answers[index]?.trim()
+  const isFormValid = form?.questions.every((_, index) =>
+    answers[index]?.trim()
   );
 
   const handleConfirmSubmit = () => {
@@ -56,18 +70,16 @@ export default function Submission() {
 
       {/* Form Card */}
       <div className="submission-card">
-        <h2 className="submission-title">
-          {title || "Evaluation Form"}
-        </h2>
+        <h2 className="submission-title">{form?.title || "Evaluation Form"}</h2>
 
         <p className="submission-subtitle">
           Please answer the questions below.
         </p>
 
-        {questions.map((question, index) => (
+        {form?.questions.map((question, index) => (
           <div className="question-block" key={index}>
             <label className="question-label">
-              {index + 1}. {question}
+              {index + 1}. {question.text}
             </label>
 
             <textarea
@@ -105,10 +117,7 @@ export default function Submission() {
               >
                 Cancel
               </button>
-              <button
-                className="confirm-btn"
-                onClick={handleConfirmSubmit}
-              >
+              <button className="confirm-btn" onClick={handleConfirmSubmit}>
                 Submit
               </button>
             </div>
@@ -123,10 +132,7 @@ export default function Submission() {
             <h2>Submission Successful</h2>
             <p>Your evaluation has been securely submitted.</p>
 
-            <button
-              className="confirm-btn"
-              onClick={() => navigate("/home")}
-            >
+            <button className="confirm-btn" onClick={() => navigate("/home")}>
               Return to Home
             </button>
           </div>

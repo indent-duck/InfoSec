@@ -8,22 +8,38 @@ const Home = () => {
   const [forms, setForms] = useState([]);
 
   useEffect(() => {
-    setForms([
-      { formId: "01111", title: "Form Title", season: "Season", deadline: "2025-07-16", status: "Pending" },
-      { formId: "01110", title: "Form Title", season: "Season", deadline: "2025-07-14", status: "Submitted" },
-      { formId: "01109", title: "Form Title", season: "Season", deadline: "2025-07-12", status: "Submitted" },
-      { formId: "01108", title: "Form Title", season: "Season", deadline: "2025-07-11", status: "Submitted" },
-      { formId: "01107", title: "Form Title", season: "Season", deadline: "2025-07-11", status: "Pending" },
-    ]);
+    const fetchForms = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/forms`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch");
+        }
+
+        const data = await response.json();
+        setForms(data);
+      } catch (err) {
+        console.error("Error fetching forms", err);
+      }
+    };
+
+    fetchForms();
   }, []);
 
   const handleAnswer = (formId) => {
-    navigate(`/submission/${formId}`);
+    navigate(`/submit/${formId}`);
   };
 
   return (
     <div className="user-home">
-
       {/* Top bar */}
       <div className="top-bar">
         <h1 className="web-name">WebName</h1>
@@ -50,35 +66,35 @@ const Home = () => {
           </thead>
 
           <tbody>
-            {forms.map((form) => (
-              <tr key={form.formId}>
-                <td>{form.formId}</td>
-                <td>{form.title}</td>
-                <td>{form.season}</td>
-                <td>{form.deadline}</td>
-                <td className={form.status === "Pending" ? "pending" : "submitted"}>
-                  {form.status}
-                </td>
-                <td>
-                  {form.status === "Pending" ? (
-                    <button
-                      className="answer-btn"
-                      onClick={() =>
-                        navigate("/submit", { state: { formId: form.id } })
-                      }
-                    >
-                      Answer
-                    </button>
-                  ) : (
-                    <span className="submitted">Submitted</span>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {forms.map((form) => {
+              const isExpired = new Date(form.expiresAt) < new Date();
+              return (
+                <tr key={form._id}>
+                  <td>{form._id}</td>
+                  <td>{form.title}</td>
+                  <td>{form.season}</td>
+                  <td>{new Date(form.expiresAt).toLocaleDateString()}</td>
+                  <td className={isExpired ? "expired" : "pending"}>
+                    {isExpired ? "Expired" : "Pending"}
+                  </td>
+                  <td>
+                    {!isExpired ? (
+                      <button
+                        className="answer-btn"
+                        onClick={() => handleAnswer(form._id)}
+                      >
+                        Answer
+                      </button>
+                    ) : (
+                      <span className="submitted">Expired</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
-
     </div>
   );
 };
