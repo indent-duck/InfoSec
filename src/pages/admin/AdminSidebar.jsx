@@ -44,7 +44,7 @@ export default function AdminSidebar() {
         </button>
         <button
           className={`${styles.sidebarBtn} ${
-            location.pathname === "/admin/users" ? styles.active : ""
+            location.pathname.startsWith("/admin/users") ? styles.active : ""
           }`}
           onClick={() => navigate("/admin/users")}
         >

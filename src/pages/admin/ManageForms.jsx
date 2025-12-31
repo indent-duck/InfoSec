@@ -6,6 +6,8 @@ import styles from "./modules/manageForms.module.css";
 export default function ManageForms() {
   const navigate = useNavigate();
   const [forms, setForms] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     const fetchForms = async () => {
@@ -33,6 +35,14 @@ export default function ManageForms() {
     fetchForms();
   }, []);
 
+  const filteredForms = forms
+    .filter((form) => 
+      form.title.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((form) => 
+      filter === "all" ? true : form.status?.toLowerCase() === filter
+    );
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -49,6 +59,35 @@ export default function ManageForms() {
         <AdminSidebar />
 
         <div className={styles.content}>
+          <div className={styles.searchFilters}>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                placeholder="Search forms by title..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={styles.searchInput}
+              />
+              <button className={styles.searchBtn}>Search</button>
+              <button 
+                className={styles.clearBtn}
+                onClick={() => setSearchTerm("")}
+              >
+                Clear
+              </button>
+            </div>
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <option value="all">All Status</option>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+              <option value="expired">Expired</option>
+            </select>
+          </div>
+          
           <div className={styles.tableContainer}>
             <table className={styles.table}>
               <thead>
@@ -61,7 +100,7 @@ export default function ManageForms() {
                 </tr>
               </thead>
               <tbody>
-                {forms.map((form) => {
+                {filteredForms.map((form) => {
                   const isActive = new Date(form.expiresAt) > new Date();
                   return (
                     <tr key={form._id}>

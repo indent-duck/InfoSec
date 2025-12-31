@@ -130,3 +130,33 @@
   background: #0e7a0c;
   color: white;
 }
+.createBtn {
+  background: #0e7a0c;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.createBtn:hover {
+  background: #0b5d09;
+}
+.headerActions {
+  position: relative;
+  z-index: 10;
+}
+
+.actions {
+  position: relative;
+  z-index: 10;
+  margin-top: 20px;
+  padding: 20px 0;
+}
+
+.addBtn {
+  position: relative;
+  z-index: 10;
+  margin: 10px 0;
+}

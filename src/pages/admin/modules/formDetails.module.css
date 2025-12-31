@@ -153,3 +153,16 @@
   line-height: 1.5;
   padding: 0.25rem 0.5rem;
 }
+.createBtn {
+  background: #0e7a0c;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.createBtn:hover {
+  background: #0b5d09;
+}

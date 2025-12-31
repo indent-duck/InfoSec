@@ -16,18 +16,13 @@ const tokenSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  status: {
-    type: String,
-    enum: ["used", "unused"],
-    default: "unused",
+  used: {
+    type: Boolean,
+    default: false,
   },
   createdAt: {
     type: Date,
     default: Date.now,
-  },
-  expiresAt: {
-    type: Date,
-    required: true,
   },
 });
 

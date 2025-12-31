@@ -50,13 +50,22 @@ export default function FormDetails() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1>Form Details</h1>
+        <h1>Manage Forms</h1>
+        <div className={styles.headerActions}>
+          <button
+            className={styles.createBtn}
+            onClick={() => navigate("/admin/forms/create")}
+          >
+            + Create New Form
+          </button>
+        </div>
       </header>
 
       <div className={styles.mainContent}>
         <AdminSidebar />
-
+        
         <div className={styles.content}>
+          <h2>Form Details</h2>
           <button
             className={styles.backBtn}
             onClick={() => navigate("/admin/forms")}

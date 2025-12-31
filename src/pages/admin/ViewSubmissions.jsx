@@ -7,6 +7,7 @@ export default function ViewSubmissions() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
   const [forms, setForms] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchForms = async () => {
@@ -36,8 +37,13 @@ export default function ViewSubmissions() {
 
   const filteredForms =
     filter === "all"
-      ? forms
-      : forms.filter((f) => f.status?.toLowerCase() === filter);
+      ? forms.filter((form) => 
+          form.title.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : forms.filter((f) => f.status?.toLowerCase() === filter)
+          .filter((form) => 
+            form.title.toLowerCase().includes(searchTerm.toLowerCase())
+          );
 
   const handleFormClick = (formId) => {
     navigate(`/admin/submissions/${formId}`);
@@ -47,18 +53,13 @@ export default function ViewSubmissions() {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1>View Submissions</h1>
-        <div className={styles.filters}>
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className={styles.filterSelect}
+        <div className={styles.headerActions}>
+          <button
+            className={styles.createBtn}
+            onClick={() => navigate("/admin/forms/create")}
           >
-            <option value="all">All Status</option>
-            <option value="open">Open</option>
-            <option value="closed">Closed</option>
-            <option value="expired">Expired</option>
-          </select>
-          <button className={styles.exportBtn}>Export All</button>
+            + Create New Form
+          </button>
         </div>
       </header>
 
@@ -66,6 +67,35 @@ export default function ViewSubmissions() {
         <AdminSidebar />
 
         <div className={styles.content}>
+          <div className={styles.searchFilters}>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                placeholder="Search forms by title..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={styles.searchInput}
+              />
+              <button className={styles.searchBtn}>Search</button>
+              <button 
+                className={styles.clearBtn}
+                onClick={() => setSearchTerm("")}
+              >
+                Clear
+              </button>
+            </div>
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <option value="all">All Status</option>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+              <option value="expired">Expired</option>
+            </select>
+          </div>
+          
           <div className={styles.tableContainer}>
             <table className={styles.table}>
               <thead>

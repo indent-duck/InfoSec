@@ -42,9 +42,14 @@ export default function FormSubmissions() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1>Submissions for: {formTitle}</h1>
+        <h1>View Submissions</h1>
         <div className={styles.filters}>
-          <button className={styles.exportBtn}>Export CSV</button>
+          <button
+            className={styles.createBtn}
+            onClick={() => navigate("/admin/forms/create")}
+          >
+            + Create New Form
+          </button>
         </div>
       </header>
 
@@ -52,6 +57,7 @@ export default function FormSubmissions() {
         <AdminSidebar />
 
         <div className={styles.content}>
+          <h2>Submissions for: {formTitle}</h2>
           <div className={styles.tableContainer}>
             <table className={styles.table}>
               <thead>
