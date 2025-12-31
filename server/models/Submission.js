@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 
 const submissionSchema = new mongoose.Schema({
+  token: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   formId: {
     type: mongoose.Types.ObjectId,
     ref: "Form",
-    required: true,
-  },
-  userId: {
-    type: mongoose.Types.ObjectId,
-    ref: "Account",
     required: true,
   },
   encryptedAnswer: {

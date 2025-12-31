@@ -1,34 +1,55 @@
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/viewSubmissions.module.css";
 
 export default function FormSubmissions() {
   const { formId } = useParams();
+  const [submissions, setSubmissions] = useState([]);
+  const [formTitle, setFormTitle] = useState("");
 
-  const submissions = [
-    { id: 1, submitter: "john@example.com", date: "2024-01-22", status: "New" },
-    {
-      id: 2,
-      submitter: "jane@example.com",
-      date: "2024-01-21",
-      status: "Reviewed",
-    },
-    {
-      id: 3,
-      submitter: "bob@example.com",
-      date: "2024-01-20",
-      status: "Archived",
-    },
-  ];
-
-  const formTitle = "Course Evaluation"; // This would come from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        
+        // Fetch form details
+        const formResponse = await fetch(
+          `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/forms/${formId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (formResponse.ok) {
+          const formData = await formResponse.json();
+          setFormTitle(formData.title);
+        }
+        
+        // Fetch submissions for this specific form
+        const submissionsResponse = await fetch(
+          `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/submissions/form/${formId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (submissionsResponse.ok) {
+          const submissionsData = await submissionsResponse.json();
+          setSubmissions(submissionsData);
+        }
+      } catch (err) {
+        console.error("Error fetching data", err);
+      }
+    };
+    fetchData();
+  }, [formId]);
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1>Submissions for: {formTitle}</h1>
+        <h1>View Submissions</h1>
         <div className={styles.filters}>
-          <button className={styles.exportBtn}>Export CSV</button>
+          <button
+            className={styles.createBtn}
+            onClick={() => navigate("/admin/forms/create")}
+          >
+            + Create New Form
+          </button>
         </div>
       </header>
 
@@ -36,34 +57,29 @@ export default function FormSubmissions() {
         <AdminSidebar />
 
         <div className={styles.content}>
+          <h2>Submissions for: {formTitle}</h2>
           <div className={styles.tableContainer}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Submitter</th>
+                  <th>Token</th>
                   <th>Date</th>
                   <th>Status</th>
-                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {submissions.map((submission) => (
-                  <tr key={submission.id}>
-                    <td>#{submission.id}</td>
-                    <td>{submission.submitter}</td>
-                    <td>{submission.date}</td>
+                  <tr key={submission._id}>
+                    <td>{submission.token}</td>
+                    <td>{submission.submittedAt}</td>
                     <td>
                       <span
-                        className={`${styles.status} ${
-                          styles[submission.status.toLowerCase()]
+                        className={`${styles.reviewed} ${
+                          styles[submission.reviewed.toLowerCase()]
                         }`}
                       >
-                        {submission.status}
+                        {submission.reviewed}
                       </span>
-                    </td>
-                    <td>
-                      <button className={styles.actionBtn}>View Details</button>
                     </td>
                   </tr>
                 ))}

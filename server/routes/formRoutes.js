@@ -1,12 +1,14 @@
 import express from "express";
 import Form from "../models/Form.js";
 import { authenticateToken } from "../middleware/AuthMiddleware.js";
+import { generateTokensForForm } from "../utils/tokenGenerator.js";
 
 const router = express.Router();
 
 // POST create form
 router.post("/", authenticateToken, async (req, res) => {
   try {
+    console.log("Form creation started");
     const { title, description, season, expiresAt, questions } = req.body;
     const form = new Form({
       title,
@@ -18,8 +20,16 @@ router.post("/", authenticateToken, async (req, res) => {
     });
 
     await form.save();
+    console.log("Form saved with ID:", form._id);
+    
+    // Generate tokens for all users
+    console.log("About to generate tokens...");
+    await generateTokensForForm(form._id);
+    console.log("Token generation completed");
+    
     res.status(201).json(form);
   } catch (err) {
+    console.error("Error in form creation:", err);
     res.status(400).json({ error: err.message });
   }
 });

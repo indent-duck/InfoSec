@@ -81,13 +81,22 @@ export default function CreateForm() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1>Create Evaluation Form</h1>
+        <h1>Manage Forms</h1>
+        <div className={styles.headerActions}>
+          <button
+            className={styles.createBtn}
+            onClick={() => navigate("/admin/forms")}
+          >
+            ← Back to Forms
+          </button>
+        </div>
       </header>
 
       <div className={styles.mainContent}>
         <AdminSidebar />
         
         <div className={styles.content}>
+          <h2>Create Evaluation Form</h2>
           <form className={styles.form} onSubmit={handleSubmit}>
             <label>Title</label>
             <input
