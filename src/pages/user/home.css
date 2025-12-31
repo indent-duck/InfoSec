@@ -1,6 +1,14 @@
 .user-home {
   padding: 40px 60px;
-  font-family: "Poppins", sans-serif;
+  font-family: "Inter", sans-serif;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.content-container {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 /* ===== TOP BAR ===== */
@@ -9,43 +17,57 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .web-name {
   font-size: 28px;
   font-weight: 600;
+  color: #2c3e50;
 }
 
 /* Square account button (Admin-style) */
 .account-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  border: 1px solid #d0d0d0;
-  background-color: #f2f2f2;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid #e0e0e0;
+  background: #666;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.account-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* ===== TOKEN CARD ===== */
 .token-card {
-  border: 1px solid #e5d8d3;
-  border-radius: 14px;
+  background: #666;
+  color: white;
+  border-radius: 16px;
   padding: 30px;
-  margin-bottom: 40px;
-  background-color: #fff;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
 .token-card h2 {
   font-size: 26px;
   font-weight: 600;
+  margin: 0;
 }
 
 /* ===== TABLE CARD ===== */
 .table-card {
-  border: 1px solid #e5d8d3;
-  border-radius: 14px;
+  background: white;
+  border-radius: 16px;
   padding: 28px 32px;
-  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e9ecef;
 }
 
 /* TABLE RESET */
@@ -60,21 +82,31 @@ table {
 thead th {
   text-align: left;
   font-weight: 600;
-  padding: 14px 6px;
-  border-bottom: 1px solid #8f8f8f;
-  background: transparent;
+  padding: 16px 12px;
+  border-bottom: 2px solid #e9ecef;
+  background: #f8f9fa;
+  color: #495057;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* BODY */
 tbody td {
-  padding: 22px 6px;
-  border-bottom: 1px solid #cfcfcf;
+  padding: 20px 12px;
+  border-bottom: 1px solid #e9ecef;
   background: transparent;
+  color: #495057;
 }
 
 /* Remove last border (like the image) */
 tbody tr:last-child td {
   border-bottom: none;
+}
+
+tbody tr:hover {
+  background: #f8f9fa;
+  transition: all 0.2s ease;
 }
 
 /* Status */
@@ -90,16 +122,19 @@ tbody tr:last-child td {
 
 /* Action button — text-only */
 .answer-btn {
-  background: #444;
+  background: #0e7a0c;
   border: none;
-  padding: 6px 14px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   color: white;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 13px;
 }
 
 .answer-btn:hover {
-  background: #222;
-  text-decoration: underline;
+  background: #0b5d09;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(14, 122, 12, 0.3);
 }

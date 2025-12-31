@@ -64,7 +64,7 @@ export default function Submission() {
     <div className="submission-container">
       {/* Header */}
       <header className="home-header">
-        <h1>WebName</h1>
+        <h1>Form</h1>
         <div className="profile-circle"></div>
       </header>
 
@@ -75,7 +75,7 @@ export default function Submission() {
         <p className="submission-subtitle">
           Please answer the questions below.
         </p>
-
+       
         {form?.questions.map((question, index) => (
           <div className="question-block" key={index}>
             <label className="question-label">

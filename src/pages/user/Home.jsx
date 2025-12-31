@@ -42,58 +42,58 @@ const Home = () => {
     <div className="user-home">
       {/* Top bar */}
       <div className="top-bar">
-        <h1 className="web-name">WebName</h1>
-        <button className="account-btn" />
+        <h1 className="web-name">Home </h1>
+        <button className="account-btn" onClick={() => navigate("/profile")} />
       </div>
 
-      {/* Tokens */}
-      <div className="token-card">
-        <h2>Current Tokens: {tokens}</h2>
-      </div>
+      <div className="content-container">
+        {/* Tokens */}
+        <div className="token-card">
+          <h2>Current Tokens: {tokens}</h2>
+        </div>
 
-      {/* Table */}
-      <div className="table-card">
-        <table>
-          <thead>
-            <tr>
-              <th>Form ID</th>
-              <th>Form Title</th>
-              <th>Season</th>
-              <th>Deadline</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+        {/* Table */}
+        <div className="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Form Title</th>
+                <th>Season</th>
+                <th>Deadline</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {forms.map((form) => {
-              const isExpired = new Date(form.expiresAt) < new Date();
-              return (
-                <tr key={form._id}>
-                  <td>{form._id}</td>
-                  <td>{form.title}</td>
-                  <td>{form.season}</td>
-                  <td>{new Date(form.expiresAt).toLocaleDateString()}</td>
-                  <td className={isExpired ? "expired" : "pending"}>
-                    {isExpired ? "Expired" : "Pending"}
-                  </td>
-                  <td>
-                    {!isExpired ? (
-                      <button
-                        className="answer-btn"
-                        onClick={() => handleAnswer(form._id)}
-                      >
-                        Answer
-                      </button>
-                    ) : (
-                      <span className="submitted">Expired</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+            <tbody>
+              {forms.map((form) => {
+                const isExpired = new Date(form.expiresAt) < new Date();
+                return (
+                  <tr key={form._id}>
+                    <td>{form.title}</td>
+                    <td>{form.season}</td>
+                    <td>{new Date(form.expiresAt).toLocaleDateString()}</td>
+                    <td className={isExpired ? "expired" : "pending"}>
+                      {isExpired ? "Expired" : "Pending"}
+                    </td>
+                    <td>
+                      {!isExpired ? (
+                        <button
+                          className="answer-btn"
+                          onClick={() => handleAnswer(form._id)}
+                        >
+                          Answer
+                        </button>
+                      ) : (
+                        <span className="submitted">Expired</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

@@ -1,13 +1,52 @@
 .submission-container {
-  padding: 20px;
+  padding: 40px 60px;
+  font-family: "Inter", sans-serif;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.home-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.profile-circle {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid #e0e0e0;
+  background: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-circle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .submission-card {
-  width: 70%;
-  margin: 50px auto;
+  background: white;
+  border-radius: 16px;
   padding: 40px;
-  border: 1px solid #cbb;
-  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e9ecef;
+  max-width: 800px;
+  margin: 0 auto 30px auto;
 }
 
 .submission-title {
@@ -15,24 +54,45 @@
   margin-bottom: 20px;
 }
 
-textarea {
-  width: 100%;
-  height: 100px;
-  border-radius: 10px;
-  padding: 15px;
-  border: 1px solid #cbb;
-  resize: none;
+.question-block {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.question-label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #2c3e50;
   font-size: 16px;
+}
+
+textarea {
+  width: 95%;
+  height: 80px;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  resize: vertical;
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
 }
 
 .submit-btn {
   display: block;
   margin: 30px auto 0;
   padding: 12px 40px;
-  background: #555;
+  background: #0e7a0c;
   color: white;
   border: none;
   border-radius: 10px;
+}
+
+.submit-btn:hover {
+  background: #0b5d09;
 }
 
 .back-btn {

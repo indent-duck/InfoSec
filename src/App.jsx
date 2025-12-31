@@ -5,11 +5,8 @@ import Home from "./pages/user/Home";
 import AdminRoutes from "./pages/admin/AdminRoutes.jsx";
 import Submission from "./pages/user/Submission";
 import SignupRoutes from "./pages/sign_up/SignupRoutes";
-<<<<<<< HEAD
-import CreateForm from "./pages/admin/Form.jsx"
-=======
-import Test from "./pages/test/test.jsx";
->>>>>>> 230d2fddfca36d7f7f06aa0552580d5647c0a7de
+import Profile from "./pages/user/Profile";
+
 
 function App() {
   return (
@@ -21,6 +18,14 @@ function App() {
           element={ 
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />
