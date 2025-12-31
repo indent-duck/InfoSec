@@ -2,11 +2,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/login/LoginPage";
 import Home from "./pages/user/Home";
-import HomeAdmin from "./pages/admin/Home";
-import AdminDashboard from "./pages/admin/Dashboard.jsx";
+import AdminRoutes from "./pages/admin/AdminRoutes.jsx";
 import Submission from "./pages/user/Submission";
 import SignupRoutes from "./pages/sign_up/SignupRoutes";
+<<<<<<< HEAD
 import CreateForm from "./pages/admin/Form.jsx"
+=======
+import Test from "./pages/test/test.jsx";
+>>>>>>> 230d2fddfca36d7f7f06aa0552580d5647c0a7de
 
 function App() {
   return (
@@ -29,10 +32,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* protected route for admin to be added later */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/home" element={<HomeAdmin />} />
-        <Route path="/admin/forms/create" element={<CreateForm />} />
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute>
+              <AdminRoutes />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/signup/*" element={<SignupRoutes />} />
       </Routes>
     </BrowserRouter>

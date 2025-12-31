@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./modules/form.module.css";
+import AdminSidebar from "./AdminSidebar";
+import styles from "./modules/createForm.module.css";
 
 export default function CreateForm() {
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ export default function CreateForm() {
       
       const data = await response.json();
       console.log("Form created", data);
-      navigate("/admin/home");
+      navigate("/admin");
     } catch (err) {
       console.error("Error creating form: ", err);
     }
@@ -79,65 +80,73 @@ export default function CreateForm() {
 
   return (
     <div className={styles.container}>
-      <h1>Create Evaluation Form</h1>
+      <header className={styles.header}>
+        <h1>Create Evaluation Form</h1>
+      </header>
 
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <label>Title</label>
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-
-        <label>Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <label>Season</label>
-        <input
-          placeholder="e.g. AY 2025–2026"
-          value={season}
-          onChange={(e) => setSeason(e.target.value)}
-          required
-        />
-
-        <label>Expiration Date</label>
-        <input
-          type="date"
-          value={expiresAt}
-          onChange={(e) => setExpiresAt(e.target.value)}
-          required
-        />
-
-        <h3>Questions</h3>
-
-        {questions.map((q, i) => (
-          <div key={i} className={styles.questionRow}>
+      <div className={styles.mainContent}>
+        <AdminSidebar />
+        
+        <div className={styles.content}>
+          <form className={styles.form} onSubmit={handleSubmit}>
+            <label>Title</label>
             <input
-              placeholder={`Question ${i + 1}`}
-              value={q}
-              onChange={(e) => updateQuestion(i, e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               required
             />
-            <button type="button" onClick={() => removeQuestion(i)}>
-              ✕
+
+            <label>Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+
+            <label>Season</label>
+            <input
+              placeholder="e.g. AY 2025–2026"
+              value={season}
+              onChange={(e) => setSeason(e.target.value)}
+              required
+            />
+
+            <label>Expiration Date</label>
+            <input
+              type="date"
+              value={expiresAt}
+              onChange={(e) => setExpiresAt(e.target.value)}
+              required
+            />
+
+            <h3>Questions</h3>
+
+            {questions.map((q, i) => (
+              <div key={i} className={styles.questionRow}>
+                <input
+                  placeholder={`Question ${i + 1}`}
+                  value={q}
+                  onChange={(e) => updateQuestion(i, e.target.value)}
+                  required
+                />
+                <button type="button" onClick={() => removeQuestion(i)}>
+                  ✕
+                </button>
+              </div>
+            ))}
+
+            <button type="button" className={styles.addBtn} onClick={addQuestion}>
+              + Add Question
             </button>
-          </div>
-        ))}
 
-        <button type="button" className={styles.addBtn} onClick={addQuestion}>
-          + Add Question
-        </button>
-
-        <div className={styles.actions}>
-          <button type="button" onClick={() => navigate("/admin/home")}>
-            Cancel
-          </button>
-          <button type="submit">Create Form</button>
+            <div className={styles.actions}>
+              <button type="button" onClick={() => navigate("/admin")}>
+                Cancel
+              </button>
+              <button type="submit">Create Form</button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

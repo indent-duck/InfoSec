@@ -1,7 +1,51 @@
 .container {
   padding: 20px;
-  max-width: 1200px;
   margin: 0 auto;
+}
+
+.mainContent {
+  display: flex;
+  gap: 20px;
+}
+
+.sidebar {
+  width: 200px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin: 0 0 20px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.sidebarActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebarBtn {
+  background: white;
+  border: 1px solid #ddd;
+  color: #333;
+  padding: 12px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.sidebarBtn:hover {
+  background: #f0f0f0;
+  border-color: #0e7a0c;
+}
+
+.content {
+  flex: 1;
 }
 
 .header {
@@ -11,6 +55,11 @@
   margin-bottom: 30px;
   padding-bottom: 20px;
   border-bottom: 2px solid #eee;
+}
+
+.header h1 {
+  margin: 0;
+  color: #333;
 }
 
 .headerActions {
@@ -53,7 +102,7 @@
   border-radius: 12px;
   border: 1px solid #e0e0e0;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .statCard h3 {

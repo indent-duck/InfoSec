@@ -21,6 +21,11 @@ const formSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    enum: ["open", "closed", "expired"],
+    default: "open",
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Account",
