@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/dashboard.module.css";
 
 export default function AdminDashboard() {
@@ -26,42 +27,18 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className={styles.statsGrid}>
-        {stats.map((stat, index) => (
-          <div key={index} className={styles.statCard}>
-            <h3 style={{ color: stat.color }}>{stat.value}</h3>
-            <p>{stat.title}</p>
+      <div className={styles.mainContent}>
+        <AdminSidebar />
+        
+        <div className={styles.content}>
+          <div className={styles.statsGrid}>
+            {stats.map((stat, index) => (
+              <div key={index} className={styles.statCard}>
+                <h3 style={{ color: stat.color }}>{stat.value}</h3>
+                <p>{stat.title}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-
-      <div className={styles.quickActions}>
-        <h2>Quick Actions</h2>
-        <div className={styles.actionGrid}>
-          <button 
-            className={styles.actionBtn}
-            onClick={() => navigate("/admin/forms")}
-          >
-            Manage Forms
-          </button>
-          <button 
-            className={styles.actionBtn}
-            onClick={() => navigate("/admin/submissions")}
-          >
-            View Submissions
-          </button>
-          <button 
-            className={styles.actionBtn}
-            onClick={() => navigate("/admin/reviews")}
-          >
-            Review Queue
-          </button>
-          <button 
-            className={styles.actionBtn}
-            onClick={() => navigate("/admin/users")}
-          >
-            User Management
-          </button>
         </div>
       </div>
     </div>

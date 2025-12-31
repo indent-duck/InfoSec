@@ -38,7 +38,7 @@ function LoginPage() {
 
       const decoded = jwtDecode(data.token);
       if (decoded.role === "admin") {
-        navigate("/admin/home");
+        navigate("/admin");
       } else {
         navigate("/home");
       }
