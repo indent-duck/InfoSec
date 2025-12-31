@@ -16,7 +16,7 @@ const generateOTP = () => {
 router.post("/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
-    
+
     // Check if email already exists
     const existingAccount = await Account.findOne({ email });
     if (existingAccount) {
@@ -25,16 +25,16 @@ router.post("/send-otp", async (req, res) => {
 
     // Generate OTP
     const otp = generateOTP();
-    
+
     // Delete any existing OTP for this email
     await OTP.deleteMany({ email });
-    
+
     // Save new OTP
     await OTP.create({ email, otp });
-    
+
     // Send OTP email
     await sendOTPEmail(email, otp);
-    
+
     res.json({ message: "OTP sent successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -45,16 +45,16 @@ router.post("/send-otp", async (req, res) => {
 router.post("/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
-    
+
     // Find OTP record
     const otpRecord = await OTP.findOne({ email, otp });
     if (!otpRecord) {
       return res.status(400).json({ error: "Invalid or expired OTP" });
     }
-    
+
     // Delete OTP after successful verification
     await OTP.deleteOne({ email, otp });
-    
+
     res.json({ message: "OTP verified successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -96,6 +96,16 @@ router.post("/login", async (req, res) => {
     res.json({ token });
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+// Get all accounts
+router.get("/", async (req, res) => {
+  try {
+    const accounts = await Account.find();
+    res.json(accounts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

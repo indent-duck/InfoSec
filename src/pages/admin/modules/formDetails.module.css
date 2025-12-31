@@ -46,7 +46,7 @@
   background: white;
   padding: 30px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .form label {
@@ -129,4 +129,27 @@
 .actions button[type="submit"] {
   background: #0e7a0c;
   color: white;
+}
+
+.rowFormat {
+  display: flex;
+  justify-content: space-between; /* space between Creation + Expiration blocks */
+}
+
+.labelPair {
+  display: flex;
+  align-items: baseline; /* text baselines line up */
+  gap: 0.5rem;
+}
+
+.labelPair label {
+  white-space: nowrap;
+}
+
+.labelPair input {
+  flex: 1;
+  min-width: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0.25rem 0.5rem;
 }

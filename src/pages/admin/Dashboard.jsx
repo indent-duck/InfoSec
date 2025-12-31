@@ -9,7 +9,7 @@ export default function AdminDashboard() {
     { title: "Total Forms", value: "12", color: "#2729AC" },
     { title: "Active Forms", value: "8", color: "#348FDF" },
     { title: "Total Submissions", value: "156", color: "#15A810" },
-    { title: "Pending Reviews", value: "23", color: "#FF6B35" }
+    { title: "Pending Reviews", value: "23", color: "#FF6B35" },
   ];
 
   return (
@@ -17,19 +17,18 @@ export default function AdminDashboard() {
       <header className={styles.header}>
         <h1>Admin Dashboard</h1>
         <div className={styles.headerActions}>
-          <button 
+          <button
             className={styles.createBtn}
             onClick={() => navigate("/admin/forms/create")}
           >
-            + Create Form
+            + Create New Form
           </button>
-          <div className={styles.profile}></div>
         </div>
       </header>
 
       <div className={styles.mainContent}>
         <AdminSidebar />
-        
+
         <div className={styles.content}>
           <div className={styles.statsGrid}>
             {stats.map((stat, index) => (

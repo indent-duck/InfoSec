@@ -86,7 +86,12 @@ export default function ManageForms() {
                           : "—"}
                       </td>
                       <td>
-                        <button className={styles.actionBtn}>Details</button>
+                        <button
+                          className={styles.actionBtn}
+                          onClick={() => navigate(`/admin/forms/${form._id}`)}
+                        >
+                          Details
+                        </button>
                       </td>
                     </tr>
                   );
