@@ -27,7 +27,7 @@ export default function ManageForms() {
         }
 
         const data = await response.json();
-        setForms(data);
+        setForms(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       } catch (err) {
         console.error("Error fetching forms", err);
       }

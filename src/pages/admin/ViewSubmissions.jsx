@@ -30,7 +30,8 @@ export default function ViewSubmissions() {
         
         // Fetch submission counts for each form
         const formsWithCounts = await Promise.all(
-          data.map(async (form) => {
+          data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map(async (form) => {
             try {
               const submissionResponse = await fetch(
                 `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/submissions/form/${form._id}`,

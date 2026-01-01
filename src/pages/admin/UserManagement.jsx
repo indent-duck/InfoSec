@@ -38,7 +38,8 @@ export default function UserManagement() {
         }
 
         const usersArray = Array.isArray(data) ? data : data.accounts || [];
-        const filtered = usersArray.filter((u) => u.role === "user");
+        const filtered = usersArray.filter((u) => u.role === "user")
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         
         // Fetch token counts for each user
         const usersWithTokens = await Promise.all(
@@ -56,17 +57,16 @@ export default function UserManagement() {
                 const tokens = await tokenResponse.json();
                 console.log(`Tokens for user ${user._id}:`, tokens);
                 console.log(`Sample token structure:`, tokens[0]);
-                const unusedTokens = tokens.filter(t => !t.used).length;
-                console.log(`Unused tokens for user ${user._id}:`, unusedTokens);
-                console.log(`Total tokens for user ${user._id}:`, tokens.length);
-                return { ...user, unusedTokens };
+                const tokenCount = tokens.length;
+                console.log(`Total tokens for user ${user._id}:`, tokenCount);
+                return { ...user, tokenCount };
               } else {
                 console.log(`Failed to fetch tokens for user ${user._id}:`, tokenResponse.status);
               }
-              return { ...user, unusedTokens: 0 };
+              return { ...user, tokenCount: 0 };
             } catch (err) {
               console.error(`Error fetching tokens for user ${user._id}:`, err);
-              return { ...user, unusedTokens: 0 };
+              return { ...user, tokenCount: 0 };
             }
           })
         );
@@ -135,12 +135,12 @@ export default function UserManagement() {
               </thead>
               <tbody>
                 {filteredUsers.map((user) => {
-                  console.log('Rendering user:', user.email, 'with tokens:', user.unusedTokens);
+                  console.log('Rendering user:', user.email, 'with tokens:', user.tokenCount);
                   return (
                     <tr key={user._id}>
                       <td>{user.studentNumber}</td>
                       <td>{user.email}</td>
-                      <td>{user.unusedTokens ?? 0}</td>
+                      <td>{user.tokenCount ?? 0}</td>
                       <td>
                         <button className={styles.editBtn} onClick={() => navigate(`/admin/users/${user._id}`)}>Details</button>
                       </td>

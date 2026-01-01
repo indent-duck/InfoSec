@@ -16,10 +16,6 @@ const tokenSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  used: {
-    type: Boolean,
-    default: false,
-  },
   createdAt: {
     type: Date,
     default: Date.now,

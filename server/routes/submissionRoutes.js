@@ -19,8 +19,7 @@ router.post("/", authenticateToken, async (req, res) => {
     // Find an unused token for this user and form
     const userToken = await Token.findOne({ 
       userId: req.user.id, 
-      formId: formId, 
-      used: false 
+      formId: formId
     });
     
     if (!userToken) {

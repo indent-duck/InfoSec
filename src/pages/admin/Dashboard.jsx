@@ -58,6 +58,7 @@ export default function AdminDashboard() {
           // Get active forms with submission counts
           const activeFormsList = await Promise.all(
             forms.filter(f => f.status !== "closed" && new Date(f.expiresAt) > new Date())
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
               .map(async (form) => {
                 const submissionResponse = await fetch(
                   `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/submissions/form/${form._id}`,

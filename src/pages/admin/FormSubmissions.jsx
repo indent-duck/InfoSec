@@ -35,7 +35,7 @@ export default function FormSubmissions() {
         );
         if (submissionsResponse.ok) {
           const submissionsData = await submissionsResponse.json();
-          setSubmissions(submissionsData);
+          setSubmissions(submissionsData.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)));
         }
       } catch (err) {
         console.error("Error fetching data", err);
