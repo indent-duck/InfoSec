@@ -4,14 +4,31 @@ import "./home.css";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [tokens] = useState(1);
+  const [tokens, setTokens] = useState(0);
   const [forms, setForms] = useState([]);
 
   useEffect(() => {
-    const fetchForms = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(
+        
+        // Fetch token count
+        const tokenResponse = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/tokens/count`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        
+        if (tokenResponse.ok) {
+          const tokenData = await tokenResponse.json();
+          setTokens(tokenData.count);
+        }
+        
+        // Fetch forms
+        const formsResponse = await fetch(
           `${import.meta.env.VITE_API_URL}/api/forms`,
           {
             headers: {
@@ -20,18 +37,16 @@ const Home = () => {
           }
         );
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch");
+        if (formsResponse.ok) {
+          const formsData = await formsResponse.json();
+          setForms(formsData);
         }
-
-        const data = await response.json();
-        setForms(data);
       } catch (err) {
-        console.error("Error fetching forms", err);
+        console.error("Error fetching data", err);
       }
     };
 
-    fetchForms();
+    fetchData();
   }, []);
 
   const handleAnswer = (formId) => {
