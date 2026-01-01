@@ -166,3 +166,53 @@
 .createBtn:hover {
   background: #0b5d09;
 }
+.formActions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.closeBtn {
+  background: #ffc107;
+  color: #212529;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  background: #e0a800;
+}
+
+.deleteBtn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  background: #c82333;
+}
+.container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mainContent {
+  height: calc(100vh - 120px);
+  overflow: hidden;
+}
+
+.content {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+}

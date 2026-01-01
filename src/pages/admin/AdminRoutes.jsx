@@ -4,6 +4,7 @@ import AdminDashboard from "./Dashboard.jsx";
 import ManageForms from "./ManageForms.jsx";
 import ViewSubmissions from "./ViewSubmissions.jsx";
 import FormSubmissions from "./FormSubmissions.jsx";
+import SubmissionDetails from "./SubmissionDetails.jsx";
 import UserManagement from "./UserManagement.jsx";
 import UserDetails from "./UserDetails.jsx";
 import FormDetails from "./FormDetails.jsx";
@@ -57,6 +58,14 @@ export default function AdminRoutes() {
         element={
           <ProtectedRoute>
             <FormSubmissions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/submissions/view/:submissionId"
+        element={
+          <ProtectedRoute>
+            <SubmissionDetails />
           </ProtectedRoute>
         }
       />

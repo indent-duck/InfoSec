@@ -238,3 +238,18 @@
 .clearBtn:hover {
   background: #5a6268;
 }
+.container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mainContent {
+  height: calc(100vh - 120px);
+  overflow: hidden;
+}
+
+.content {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+}

@@ -8,8 +8,10 @@ export default function AdminSidebar() {
   const auth = useAuth();
 
   const handleLogout = () => {
-    auth.logout();
-    navigate("/");
+    if (confirm("Are you sure you want to logout?")) {
+      auth.logout();
+      navigate("/");
+    }
   };
 
   return (

@@ -1,5 +1,7 @@
 import express from "express";
 import Form from "../models/Form.js";
+import Token from "../models/Token.js";
+import Submission from "../models/Submission.js";
 import { authenticateToken } from "../middleware/AuthMiddleware.js";
 import { generateTokensForForm } from "../utils/tokenGenerator.js";
 
@@ -52,6 +54,46 @@ router.get("/:id", authenticateToken, async (req, res) => {
       return res.status(404).json({ error: "Form not found" });
     }
     res.json(form);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT update form status
+router.put("/:id", authenticateToken, async (req, res) => {
+  try {
+    const form = await Form.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!form) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    res.json(form);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE form
+router.delete("/:id", authenticateToken, async (req, res) => {
+  try {
+    const form = await Form.findById(req.params.id);
+    if (!form) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+
+    // Delete related tokens
+    await Token.deleteMany({ formId: req.params.id });
+    
+    // Delete related submissions
+    await Submission.deleteMany({ formId: req.params.id });
+    
+    // Delete the form
+    await Form.findByIdAndDelete(req.params.id);
+    
+    res.json({ message: "Form and related data deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

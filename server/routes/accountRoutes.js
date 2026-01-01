@@ -1,9 +1,11 @@
 import express from "express";
 import Account from "../models/Account.js";
+import Token from "../models/Token.js";
 import OTP from "../models/OTP.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendOTPEmail } from "../utils/emailService.js";
+import { authenticateToken } from "../middleware/AuthMiddleware.js";
 
 const router = express.Router();
 
@@ -104,6 +106,26 @@ router.get("/", async (req, res) => {
   try {
     const accounts = await Account.find();
     res.json(accounts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE user and their unused tokens
+router.delete("/:id", authenticateToken, async (req, res) => {
+  try {
+    const user = await Account.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Delete all unused tokens for this user
+    await Token.deleteMany({ userId: req.params.id, used: false });
+    
+    // Delete the user
+    await Account.findByIdAndDelete(req.params.id);
+    
+    res.json({ message: "User and unused tokens deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

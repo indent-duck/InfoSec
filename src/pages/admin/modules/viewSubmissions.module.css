@@ -227,3 +227,31 @@
 .clearBtn:hover {
   background: #5a6268;
 }
+.container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mainContent {
+  height: calc(100vh - 120px);
+  overflow: hidden;
+}
+
+.content {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+.backBtn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.backBtn:hover {
+  background: #5a6268;
+}

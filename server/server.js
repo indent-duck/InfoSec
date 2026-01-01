@@ -35,8 +35,10 @@ app.get("/", (req, res) => {
 import accountRoutes from "./routes/accountRoutes.js";
 import formRoutes from "./routes/formRoutes.js";
 import tokenRoutes from "./routes/tokenRoutes.js";
+import submissionRoutes from "./routes/submissionRoutes.js";
 app.use("/api/accounts", accountRoutes);
 app.use("/api/forms", formRoutes);
 app.use("/api/tokens", tokenRoutes);
+app.use("/api/submissions", submissionRoutes);
 
 app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`));

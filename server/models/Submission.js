@@ -1,20 +1,25 @@
 import mongoose from "mongoose";
 
 const submissionSchema = new mongoose.Schema({
-  token: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   formId: {
     type: mongoose.Types.ObjectId,
     ref: "Form",
     required: true,
   },
-  encryptedAnswer: {
+  token: {
     type: String,
     required: true,
   },
+  answers: [{
+    questionIndex: {
+      type: Number,
+      required: true,
+    },
+    answer: {
+      type: String,
+      required: true,
+    }
+  }],
   submittedAt: {
     type: Date,
     default: Date.now,

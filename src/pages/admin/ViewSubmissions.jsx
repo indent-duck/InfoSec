@@ -27,7 +27,36 @@ export default function ViewSubmissions() {
           throw new Error("Failed to fetch");
         }
         const data = await response.json();
-        setForms(data);
+        
+        // Fetch submission counts for each form
+        const formsWithCounts = await Promise.all(
+          data.map(async (form) => {
+            try {
+              const submissionResponse = await fetch(
+                `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/submissions/form/${form._id}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              console.log(`Submission response for form ${form._id}:`, submissionResponse.status);
+              if (submissionResponse.ok) {
+                const submissions = await submissionResponse.json();
+                console.log(`Found ${submissions.length} submissions for form ${form._id}`);
+                return { ...form, submissions: submissions.length };
+              } else {
+                console.log(`Failed to fetch submissions for form ${form._id}:`, submissionResponse.status);
+              }
+              return { ...form, submissions: 0 };
+            } catch (err) {
+              console.error(`Error fetching submissions for form ${form._id}:`, err);
+              return { ...form, submissions: 0 };
+            }
+          })
+        );
+        
+        setForms(formsWithCounts);
       } catch (err) {
         console.error("Error fetching forms", err);
       }
@@ -108,7 +137,9 @@ export default function ViewSubmissions() {
               </thead>
               <tbody>
                 {filteredForms.map((form) => {
-                  const isActive = new Date(form.expiresAt) > new Date();
+                  const isExpired = new Date(form.expiresAt) <= new Date();
+                  const displayStatus = form.status === "closed" ? "closed" : (isExpired ? "expired" : "active");
+                  
                   return (
                     <tr
                       key={form._id}
@@ -119,10 +150,12 @@ export default function ViewSubmissions() {
                       <td>
                         <span
                           className={`${styles.status} ${
-                            isActive ? styles.open : styles.expired
+                            displayStatus === "active" ? styles.open : 
+                            displayStatus === "closed" ? styles.closed :
+                            styles.expired
                           }`}
                         >
-                          {isActive ? "Active" : "Expired"}
+                          {displayStatus.charAt(0).toUpperCase() + displayStatus.slice(1)}
                         </span>
                       </td>
                       <td>{form.submissions || 0}</td>

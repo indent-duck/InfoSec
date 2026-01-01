@@ -8,6 +8,7 @@ export default function UserManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -53,8 +54,14 @@ export default function UserManagement() {
               );
               if (tokenResponse.ok) {
                 const tokens = await tokenResponse.json();
+                console.log(`Tokens for user ${user._id}:`, tokens);
+                console.log(`Sample token structure:`, tokens[0]);
                 const unusedTokens = tokens.filter(t => !t.used).length;
+                console.log(`Unused tokens for user ${user._id}:`, unusedTokens);
+                console.log(`Total tokens for user ${user._id}:`, tokens.length);
                 return { ...user, unusedTokens };
+              } else {
+                console.log(`Failed to fetch tokens for user ${user._id}:`, tokenResponse.status);
               }
               return { ...user, unusedTokens: 0 };
             } catch (err) {
@@ -64,6 +71,7 @@ export default function UserManagement() {
           })
         );
         
+        console.log('Final users with tokens:', usersWithTokens);
         setUsers(usersWithTokens);
       } catch (err) {
         console.error("Error fetching users:", err);
@@ -77,6 +85,10 @@ export default function UserManagement() {
   }, []);
 
   if (loading) return <p>Loading users...</p>;
+
+  const filteredUsers = users.filter(user => 
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className={styles.container}>
@@ -95,6 +107,22 @@ export default function UserManagement() {
       <div className={styles.mainContent}>
         <AdminSidebar />
         <div className={styles.content}>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Search by email address..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInput}
+            />
+            <button 
+              className={styles.clearBtn}
+              onClick={() => setSearchTerm("")}
+            >
+              Clear
+            </button>
+          </div>
+          
           <div className={styles.tableContainer}>
             <table className={styles.table}>
               <thead>
@@ -106,22 +134,28 @@ export default function UserManagement() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
-                  <tr key={user._id}>
-                    <td>{user.studentNumber}</td>
-                    <td>{user.email}</td>
-                    <td>{user.unusedTokens ?? 0}</td>
-                    <td>
-                      <button className={styles.editBtn} onClick={() => navigate(`/admin/users/${user._id}`)}>Details</button>
-                    </td>
-                  </tr>
-                ))}
+                {filteredUsers.map((user) => {
+                  console.log('Rendering user:', user.email, 'with tokens:', user.unusedTokens);
+                  return (
+                    <tr key={user._id}>
+                      <td>{user.studentNumber}</td>
+                      <td>{user.email}</td>
+                      <td>{user.unusedTokens ?? 0}</td>
+                      <td>
+                        <button className={styles.editBtn} onClick={() => navigate(`/admin/users/${user._id}`)}>Details</button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
             {error ? (
               <p style={{ color: "red" }}>{error}</p>
             ) : (
-              users.length === 0 && <p>No users found.</p>
+              filteredUsers.length === 0 && users.length > 0 && searchTerm ? 
+                <p>No users found matching your search.</p> : 
+                filteredUsers.length === 0 && users.length === 0 ?
+                <p>No users found.</p> : null
             )}
           </div>
         </div>

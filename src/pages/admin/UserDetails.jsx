@@ -8,6 +8,7 @@ export default function UserDetails() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [tokenCount, setTokenCount] = useState(0);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,6 +31,23 @@ export default function UserDetails() {
         const usersArray = Array.isArray(data) ? data : data.accounts || [];
         const foundUser = usersArray.find(u => u._id === userId);
         setUser(foundUser);
+        
+        // Fetch token count for this user
+        if (foundUser) {
+          const tokenResponse = await fetch(
+            `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/tokens/user/${userId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (tokenResponse.ok) {
+            const tokens = await tokenResponse.json();
+            const unusedTokens = tokens.filter(t => !t.used).length;
+            setTokenCount(unusedTokens);
+          }
+        }
       } catch (err) {
         console.error("Error fetching user:", err);
       } finally {
@@ -65,10 +83,16 @@ export default function UserDetails() {
         <AdminSidebar />
         
         <div className={styles.content}>
-          <h2>User Details</h2>
-          <button className={styles.backBtn} onClick={() => navigate("/admin/users")}>
-            ← Back to Users
-          </button>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+            <button
+              className={styles.backBtn}
+              onClick={() => navigate("/admin/users")}
+            >
+              ← Back to Users
+            </button>
+            <h2 style={{ margin: "0", textAlign: "center", flex: "1" }}>User Details</h2>
+            <div style={{ width: "150px" }}></div>
+          </div>
           
           <div className={styles.form}>
             <label>Student Number</label>
@@ -91,7 +115,7 @@ export default function UserDetails() {
 
             <label>Unused Tokens</label>
             <input
-              value={user.unusedTokens || 0}
+              value={tokenCount}
               readOnly
             />
 
@@ -101,6 +125,36 @@ export default function UserDetails() {
               value={user.createdAt ? new Date(user.createdAt).toISOString().slice(0, 10) : ""}
               readOnly
             />
+          </div>
+          
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
+            <button
+              className={styles.deleteBtn}
+              onClick={async () => {
+                if (confirm("Are you sure you want to delete this user? This will also delete all their unused tokens.")) {
+                  try {
+                    const token = localStorage.getItem("token");
+                    const response = await fetch(
+                      `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/accounts/${userId}`,
+                      {
+                        method: "DELETE",
+                        headers: {
+                          Authorization: `Bearer ${token}`,
+                        },
+                      }
+                    );
+                    if (response.ok) {
+                      alert("User deleted successfully");
+                      navigate("/admin/users");
+                    }
+                  } catch (err) {
+                    console.error("Error deleting user:", err);
+                  }
+                }
+              }}
+            >
+              Delete User
+            </button>
           </div>
         </div>
       </div>

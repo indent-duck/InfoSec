@@ -135,3 +135,52 @@
 
 .role.admin { background: #f8d7da; color: #721c24; }
 .role.user { background: #d4edda; color: #155724; }
+.searchContainer {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.clearBtn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.clearBtn:hover {
+  background: #5a6268;
+}
+.container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mainContent {
+  height: calc(100vh - 120px);
+  overflow: hidden;
+}
+
+.content {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+}

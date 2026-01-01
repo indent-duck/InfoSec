@@ -49,27 +49,24 @@ export default function CreateForm() {
     try {
       const token = localStorage.getItem("token");
       console.log("Token:", token ? "Present" : "Missing");
-      
-      const response = await fetch(
-        `${API_URL}/api/forms`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-      
+
+      const response = await fetch(`${API_URL}/api/forms`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
       console.log("Response status:", response.status);
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.log("Error response:", errorText);
         throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
-      
+
       const data = await response.json();
       console.log("Form created", data);
       navigate("/admin");
@@ -94,9 +91,9 @@ export default function CreateForm() {
 
       <div className={styles.mainContent}>
         <AdminSidebar />
-        
+
         <div className={styles.content}>
-          <h2>Create Evaluation Form</h2>
+          <h2>Create Form</h2>
           <form className={styles.form} onSubmit={handleSubmit}>
             <label>Title</label>
             <input
@@ -143,7 +140,11 @@ export default function CreateForm() {
               </div>
             ))}
 
-            <button type="button" className={styles.addBtn} onClick={addQuestion}>
+            <button
+              type="button"
+              className={styles.addBtn}
+              onClick={addQuestion}
+            >
               + Add Question
             </button>
 

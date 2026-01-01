@@ -36,10 +36,10 @@ export default function ManageForms() {
   }, []);
 
   const filteredForms = forms
-    .filter((form) => 
+    .filter((form) =>
       form.title.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter((form) => 
+    .filter((form) =>
       filter === "all" ? true : form.status?.toLowerCase() === filter
     );
 
@@ -69,7 +69,7 @@ export default function ManageForms() {
                 className={styles.searchInput}
               />
               <button className={styles.searchBtn}>Search</button>
-              <button 
+              <button
                 className={styles.clearBtn}
                 onClick={() => setSearchTerm("")}
               >
@@ -87,7 +87,7 @@ export default function ManageForms() {
               <option value="expired">Expired</option>
             </select>
           </div>
-          
+
           <div className={styles.tableContainer}>
             <table className={styles.table}>
               <thead>
@@ -101,17 +101,29 @@ export default function ManageForms() {
               </thead>
               <tbody>
                 {filteredForms.map((form) => {
-                  const isActive = new Date(form.expiresAt) > new Date();
+                  const isExpired = new Date(form.expiresAt) <= new Date();
+                  const displayStatus =
+                    form.status === "closed"
+                      ? "closed"
+                      : isExpired
+                      ? "expired"
+                      : "active";
+
                   return (
                     <tr key={form._id}>
                       <td>{form.title}</td>
                       <td>
                         <span
                           className={`${styles.status} ${
-                            isActive ? styles.active : styles.expired
+                            displayStatus === "active"
+                              ? styles.active
+                              : displayStatus === "closed"
+                              ? styles.closed
+                              : styles.expired
                           }`}
                         >
-                          {isActive ? "Active" : "Expired"}
+                          {displayStatus.charAt(0).toUpperCase() +
+                            displayStatus.slice(1)}
                         </span>
                       </td>
                       <td>
@@ -120,7 +132,7 @@ export default function ManageForms() {
                           : "—"}
                       </td>
                       <td>
-                        {form.createdAt
+                        {form.expiresAt
                           ? new Date(form.expiresAt).toLocaleDateString()
                           : "—"}
                       </td>

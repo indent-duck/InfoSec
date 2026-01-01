@@ -55,9 +55,49 @@ export default function Submission() {
     answers[index]?.trim()
   );
 
-  const handleConfirmSubmit = () => {
-    setShowConfirm(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      
+      console.log("Submitting form with ID:", formId);
+      console.log("Answers:", answers);
+      
+      // Format answers for submission
+      const formattedAnswers = Object.entries(answers).map(([index, answer]) => ({
+        questionIndex: parseInt(index),
+        answer: answer
+      }));
+      
+      console.log("Formatted answers:", formattedAnswers);
+      
+      const response = await fetch(`${API_URL}/api/submissions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          formId: formId,
+          answers: formattedAnswers
+        }),
+      });
+      
+      console.log("Response status:", response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
+        throw new Error(`Failed to submit form: ${errorText}`);
+      }
+      
+      setShowConfirm(false);
+      setShowSuccess(true);
+    } catch (err) {
+      console.error("Error submitting form:", err);
+      alert("Error submitting form. Please try again.");
+      setShowConfirm(false);
+    }
   };
 
   return (

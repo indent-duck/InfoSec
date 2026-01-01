@@ -65,13 +65,16 @@ export default function FormDetails() {
         <AdminSidebar />
         
         <div className={styles.content}>
-          <h2>Form Details</h2>
-          <button
-            className={styles.backBtn}
-            onClick={() => navigate("/admin/forms")}
-          >
-            ← Back to Forms
-          </button>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+            <button
+              className={styles.backBtn}
+              onClick={() => navigate("/admin/forms")}
+            >
+              ← Back to Forms
+            </button>
+            <h2 style={{ margin: "0", textAlign: "center", flex: "1" }}>Form Details</h2>
+            <div style={{ width: "150px" }}></div>
+          </div>
 
           <div className={styles.form}>
             <div className={styles.rowFormat}>
@@ -133,6 +136,67 @@ export default function FormDetails() {
                 />
               </div>
             ))}
+          </div>
+          
+          <div className={styles.formActions} style={{ justifyContent: "flex-end" }}>
+            {status !== "closed" && new Date(expiresAt) > new Date() && (
+              <button
+                className={styles.closeBtn}
+                onClick={async () => {
+                  if (confirm("Are you sure you want to close this form?")) {
+                    try {
+                      const token = localStorage.getItem("token");
+                      const response = await fetch(
+                        `${import.meta.env.VITE_API_URL}/api/forms/${formId}`,
+                        {
+                          method: "PUT",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                          },
+                          body: JSON.stringify({ status: "closed" }),
+                        }
+                      );
+                      if (response.ok) {
+                        alert("Form closed successfully");
+                        window.location.reload();
+                      }
+                    } catch (err) {
+                      console.error("Error closing form:", err);
+                    }
+                  }
+                }}
+              >
+                Close Form
+              </button>
+            )}
+            <button
+              className={styles.deleteBtn}
+              onClick={async () => {
+                if (confirm("Are you sure you want to delete this form?")) {
+                  try {
+                    const token = localStorage.getItem("token");
+                    const response = await fetch(
+                      `${import.meta.env.VITE_API_URL}/api/forms/${formId}`,
+                      {
+                        method: "DELETE",
+                        headers: {
+                          Authorization: `Bearer ${token}`,
+                        },
+                      }
+                    );
+                    if (response.ok) {
+                      alert("Form deleted successfully");
+                      navigate("/admin/forms");
+                    }
+                  } catch (err) {
+                    console.error("Error deleting form:", err);
+                  }
+                }
+              }}
+            >
+              Delete Form
+            </button>
           </div>
         </div>
       </div>
