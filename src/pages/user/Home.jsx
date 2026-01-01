@@ -4,38 +4,50 @@ import "./home.css";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [tokens] = useState(1);
+  const [tokens, setTokens] = useState(0);
   const [forms, setForms] = useState([]);
+  const [userTokens, setUserTokens] = useState([]);
 
   useEffect(() => {
-    const fetchForms = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(
+        const { jwtDecode } = await import("jwt-decode");
+        const decoded = jwtDecode(token);
+        
+        // Fetch forms
+        const formsResponse = await fetch(
           `${import.meta.env.VITE_API_URL}/api/forms`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch");
+        if (formsResponse.ok) {
+          setForms(await formsResponse.json());
         }
-
-        const data = await response.json();
-        setForms(data);
+        
+        // Fetch user tokens
+        const tokensResponse = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/tokens/user/${decoded.id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (tokensResponse.ok) {
+          const tokenData = await tokensResponse.json();
+          setUserTokens(tokenData);
+          setTokens(tokenData.length);
+        }
       } catch (err) {
-        console.error("Error fetching forms", err);
+        console.error("Error fetching data", err);
       }
     };
 
-    fetchForms();
+    fetchData();
   }, []);
 
   const handleAnswer = (formId) => {
     navigate(`/submit/${formId}`);
+  };
+
+  const hasTokenForForm = (formId) => {
+    return userTokens.some(token => token.formId === formId || token.formId._id === formId);
   };
 
   return (
@@ -68,16 +80,17 @@ const Home = () => {
             <tbody>
               {forms.map((form) => {
                 const isExpired = new Date(form.expiresAt) < new Date();
+                const hasToken = hasTokenForForm(form._id);
                 return (
                   <tr key={form._id}>
                     <td>{form.title}</td>
                     <td>{form.season}</td>
                     <td>{new Date(form.expiresAt).toLocaleDateString()}</td>
-                    <td className={isExpired ? "expired" : "pending"}>
-                      {isExpired ? "Expired" : "Pending"}
+                    <td className={isExpired ? "expired" : form.status === "closed" ? "closed" : "open"}>
+                      {isExpired ? "Expired" : form.status === "closed" ? "Closed" : "Open"}
                     </td>
                     <td>
-                      {!isExpired ? (
+                      {!isExpired && hasToken ? (
                         <button
                           className="answer-btn"
                           onClick={() => handleAnswer(form._id)}
@@ -85,7 +98,9 @@ const Home = () => {
                           Answer
                         </button>
                       ) : (
-                        <span className="submitted">Expired</span>
+                        <span className="submitted">
+                          {isExpired ? "Expired" : "Submitted"}
+                        </span>
                       )}
                     </td>
                   </tr>

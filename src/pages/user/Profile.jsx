@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./home.profile.css";
@@ -6,6 +6,32 @@ import "./home.profile.css";
 const Profile = () => {
   const navigate = useNavigate();
   const auth = useAuth();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const { jwtDecode } = await import("jwt-decode");
+        const decoded = jwtDecode(token);
+        
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/accounts`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        
+        if (response.ok) {
+          const accounts = await response.json();
+          const currentUser = accounts.find(acc => acc._id === decoded.id);
+          setUserData(currentUser);
+        }
+      } catch (err) {
+        console.error("Error fetching user data", err);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleLogout = () => {
     auth.logout();
@@ -23,8 +49,8 @@ const Profile = () => {
         <div className="profile-section">
           <div className="profile-avatar"></div>
           <div className="profile-info">
-            <h2>John Doe</h2>
-            <p>Joined on July 16, 2025</p>
+            <h2>{userData?.studentNumber || "Loading..."}</h2>
+            <p>Joined on {userData?.createdAt ? new Date(userData.createdAt).toLocaleDateString() : "Loading..."}</p>
           </div>
         </div>
 
@@ -33,15 +59,15 @@ const Profile = () => {
           <div className="info-grid">
             <div className="info-field">
               <label>Full Name</label>
-              <input type="text" value="John Doe" readOnly />
+              <input type="text" value={userData?.studentNumber || ""} readOnly />
             </div>
             <div className="info-field">
               <label>Email</label>
-              <input type="text" value="johndoe@gmail.com" readOnly />
+              <input type="text" value={userData?.email || ""} readOnly />
             </div>
             <div className="info-field">
               <label>Role</label>
-              <input type="text" value="User" readOnly />
+              <input type="text" value={userData?.role || ""} readOnly />
             </div>
           </div>
         </div>
@@ -50,7 +76,7 @@ const Profile = () => {
           <label>Password</label>
           <input
             type="text"
-            value="ef92b778bafe771e89245b89ecbc08a44a4e166c0665991188f383d4473e94f"
+            value={userData?.passwordHash || ""}
             readOnly
           />
         </div>
