@@ -33,10 +33,10 @@ function LoginPage() {
       if (!response.ok) {
         throw new Error(data.error || "Login Failed");
       }
-      localStorage.setItem("token", data.token);
-      auth.login({ token: data.token });
-
+      
       const decoded = jwtDecode(data.token);
+      auth.login({ token: data.token, ...decoded });
+
       if (decoded.role === "admin") {
         navigate("/admin");
       } else {

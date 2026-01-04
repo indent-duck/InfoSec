@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/userManagement.module.css";
 
 export default function UserManagement() {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,13 +15,17 @@ export default function UserManagement() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem("token");
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
+        
         const response = await fetch(
           `${
             import.meta.env.VITE_API_URL || "http://localhost:5000"
           }/api/accounts`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${auth.user.token}` },
           }
         );
 
@@ -50,18 +56,13 @@ export default function UserManagement() {
                   import.meta.env.VITE_API_URL || "http://localhost:5000"
                 }/api/tokens/user/${user._id}`,
                 {
-                  headers: { Authorization: `Bearer ${token}` },
+                  headers: { Authorization: `Bearer ${auth.user.token}` },
                 }
               );
               if (tokenResponse.ok) {
                 const tokens = await tokenResponse.json();
-                console.log(`Tokens for user ${user._id}:`, tokens);
-                console.log(`Sample token structure:`, tokens[0]);
                 const tokenCount = tokens.length;
-                console.log(`Total tokens for user ${user._id}:`, tokenCount);
                 return { ...user, tokenCount };
-              } else {
-                console.log(`Failed to fetch tokens for user ${user._id}:`, tokenResponse.status);
               }
               return { ...user, tokenCount: 0 };
             } catch (err) {
@@ -71,7 +72,6 @@ export default function UserManagement() {
           })
         );
         
-        console.log('Final users with tokens:', usersWithTokens);
         setUsers(usersWithTokens);
       } catch (err) {
         console.error("Error fetching users:", err);
@@ -82,7 +82,7 @@ export default function UserManagement() {
     };
 
     fetchUsers();
-  }, []);
+  }, [auth.user, navigate]);
 
   if (loading) return <p>Loading users...</p>;
 
@@ -135,7 +135,6 @@ export default function UserManagement() {
               </thead>
               <tbody>
                 {filteredUsers.map((user) => {
-                  console.log('Rendering user:', user.email, 'with tokens:', user.tokenCount);
                   return (
                     <tr key={user._id}>
                       <td>{user.studentNumber}</td>

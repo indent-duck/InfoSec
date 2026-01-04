@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/manageForms.module.css";
 
 export default function ManageForms() {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [forms, setForms] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
@@ -12,12 +14,16 @@ export default function ManageForms() {
   useEffect(() => {
     const fetchForms = async () => {
       try {
-        const token = localStorage.getItem("token");
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
+        
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/api/forms`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${auth.user.token}`,
             },
           }
         );
@@ -33,7 +39,7 @@ export default function ManageForms() {
       }
     };
     fetchForms();
-  }, []);
+  }, [auth.user, navigate]);
 
   const filteredForms = forms
     .filter((form) =>

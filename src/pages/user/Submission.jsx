@@ -1,47 +1,44 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import "./submission.css";
 
 export default function Submission() {
   const navigate = useNavigate();
-
+  const auth = useAuth();
   const { formId } = useParams();
   const [form, setForm] = useState(null);
 
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        const token = localStorage.getItem("token");
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
+        
         const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-        console.log("Fetching form with ID:", formId);
-        console.log("API URL:", API_URL);
-        console.log("Token:", token ? "Present" : "Missing");
         
         const response = await fetch(
           `${API_URL}/api/forms/${formId}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${auth.user.token}`,
             },
           }
         );
         
-        console.log("Response status:", response.status);
-        
         if (!response.ok) {
-          const errorText = await response.text();
-          console.log("Error response:", errorText);
           throw new Error("Failed to fetch form data");
         }
         const data = await response.json();
-        console.log("Form data:", data);
         setForm(data);
       } catch (err) {
         console.error("Error fetching form: ", err);
       }
     };
     fetchForm();
-  }, [formId]);
+  }, [formId, auth.user, navigate]);
 
   const [answers, setAnswers] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
@@ -57,11 +54,12 @@ export default function Submission() {
 
   const handleConfirmSubmit = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      if (!auth.user || !auth.user.token) {
+        navigate("/");
+        return;
+      }
       
-      console.log("Submitting form with ID:", formId);
-      console.log("Answers:", answers);
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
       
       // Format answers for submission
       const formattedAnswers = Object.entries(answers).map(([index, answer]) => ({
@@ -69,13 +67,11 @@ export default function Submission() {
         answer: answer
       }));
       
-      console.log("Formatted answers:", formattedAnswers);
-      
       const response = await fetch(`${API_URL}/api/submissions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.user.token}`,
         },
         body: JSON.stringify({
           formId: formId,
@@ -83,11 +79,8 @@ export default function Submission() {
         }),
       });
       
-      console.log("Response status:", response.status);
-      
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Error response:", errorText);
         throw new Error(`Failed to submit form: ${errorText}`);
       }
       

@@ -1,11 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
 import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/createForm.module.css";
 
 export default function UserDetails() {
   const { userId } = useParams();
   const navigate = useNavigate();
+  const auth = useAuth();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tokenCount, setTokenCount] = useState(0);
@@ -13,12 +15,16 @@ export default function UserDetails() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = localStorage.getItem("token");
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
+        
         const response = await fetch(
           `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/accounts`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${auth.user.token}`,
             },
           }
         );
@@ -38,7 +44,7 @@ export default function UserDetails() {
             `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/tokens/user/${userId}`,
             {
               headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${auth.user.token}`,
               },
             }
           );
@@ -55,7 +61,7 @@ export default function UserDetails() {
       }
     };
     fetchUser();
-  }, [userId]);
+  }, [userId, auth.user, navigate]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -133,13 +139,12 @@ export default function UserDetails() {
               onClick={async () => {
                 if (confirm("Are you sure you want to delete this user? This will also delete all their unused tokens.")) {
                   try {
-                    const token = localStorage.getItem("token");
                     const response = await fetch(
                       `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/accounts/${userId}`,
                       {
                         method: "DELETE",
                         headers: {
-                          Authorization: `Bearer ${token}`,
+                          Authorization: `Bearer ${auth.user.token}`,
                         },
                       }
                     );

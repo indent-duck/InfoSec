@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/submissionDetails.module.css";
 
 export default function SubmissionDetails() {
   const { submissionId } = useParams();
   const navigate = useNavigate();
+  const auth = useAuth();
   const [submission, setSubmission] = useState(null);
   const [form, setForm] = useState(null);
   const [decryptedAnswers, setDecryptedAnswers] = useState([]);
@@ -14,7 +16,10 @@ export default function SubmissionDetails() {
   useEffect(() => {
     const fetchSubmission = async () => {
       try {
-        const token = localStorage.getItem("token");
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
 
         // Fetch submission details
         const submissionResponse = await fetch(
@@ -22,7 +27,7 @@ export default function SubmissionDetails() {
             import.meta.env.VITE_API_URL || "http://localhost:5000"
           }/api/submissions/${submissionId}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${auth.user.token}` },
           }
         );
 
@@ -36,7 +41,7 @@ export default function SubmissionDetails() {
               import.meta.env.VITE_API_URL || "http://localhost:5000"
             }/api/forms/${submissionData.formId}`,
             {
-              headers: { Authorization: `Bearer ${token}` },
+              headers: { Authorization: `Bearer ${auth.user.token}` },
             }
           );
 
@@ -56,7 +61,7 @@ export default function SubmissionDetails() {
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${auth.user.token}`,
                       },
                       body: JSON.stringify({ encryptedText: answer.answer }),
                     }
@@ -93,7 +98,7 @@ export default function SubmissionDetails() {
     };
 
     fetchSubmission();
-  }, [submissionId]);
+  }, [submissionId, auth.user, navigate]);
 
   if (loading) return <p>Loading...</p>;
   if (!submission) return <p>Submission not found</p>;
@@ -199,7 +204,6 @@ export default function SubmissionDetails() {
                 className={styles.reviewBtn}
                 onClick={async () => {
                   try {
-                    const token = localStorage.getItem("token");
                     const response = await fetch(
                       `${
                         import.meta.env.VITE_API_URL || "http://localhost:5000"
@@ -207,7 +211,7 @@ export default function SubmissionDetails() {
                       {
                         method: "PUT",
                         headers: {
-                          Authorization: `Bearer ${token}`,
+                          Authorization: `Bearer ${auth.user.token}`,
                         },
                       }
                     );

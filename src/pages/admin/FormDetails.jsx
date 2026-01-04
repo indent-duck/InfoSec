@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/formDetails.module.css";
 
 export default function FormDetails() {
   const { formId } = useParams();
   const navigate = useNavigate();
+  const auth = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [season, setSeason] = useState("");
@@ -17,12 +19,16 @@ export default function FormDetails() {
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        const token = localStorage.getItem("token");
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
+        
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/api/forms/${formId}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${auth.user.token}`,
             },
           }
         );
@@ -45,7 +51,7 @@ export default function FormDetails() {
     };
 
     fetchForm();
-  }, [formId]);
+  }, [formId, auth.user, navigate]);
 
   return (
     <div className={styles.container}>
@@ -145,14 +151,13 @@ export default function FormDetails() {
                 onClick={async () => {
                   if (confirm("Are you sure you want to close this form?")) {
                     try {
-                      const token = localStorage.getItem("token");
                       const response = await fetch(
                         `${import.meta.env.VITE_API_URL}/api/forms/${formId}`,
                         {
                           method: "PUT",
                           headers: {
                             "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
+                            Authorization: `Bearer ${auth.user.token}`,
                           },
                           body: JSON.stringify({ status: "closed" }),
                         }
@@ -175,13 +180,12 @@ export default function FormDetails() {
               onClick={async () => {
                 if (confirm("Are you sure you want to delete this form?")) {
                   try {
-                    const token = localStorage.getItem("token");
                     const response = await fetch(
                       `${import.meta.env.VITE_API_URL}/api/forms/${formId}`,
                       {
                         method: "DELETE",
                         headers: {
-                          Authorization: `Bearer ${token}`,
+                          Authorization: `Bearer ${auth.user.token}`,
                         },
                       }
                     );

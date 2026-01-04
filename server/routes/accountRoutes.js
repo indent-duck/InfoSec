@@ -101,6 +101,19 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Get current user profile
+router.get("/profile", authenticateToken, async (req, res) => {
+  try {
+    const account = await Account.findById(req.user.id).select('-passwordHash');
+    if (!account) {
+      return res.status(404).json({ error: "Account not found" });
+    }
+    res.json(account);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Get all accounts
 router.get("/", async (req, res) => {
   try {

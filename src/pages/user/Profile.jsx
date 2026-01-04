@@ -11,27 +11,34 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const { jwtDecode } = await import("jwt-decode");
-        const decoded = jwtDecode(token);
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
+        
+        // If this is an admin token, redirect to admin area
+        if (auth.user.role === 'admin') {
+          navigate("/admin");
+          return;
+        }
         
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/accounts`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          `${import.meta.env.VITE_API_URL}/api/accounts/profile`,
+          { headers: { Authorization: `Bearer ${auth.user.token}` } }
         );
         
         if (response.ok) {
-          const accounts = await response.json();
-          const currentUser = accounts.find(acc => acc._id === decoded.id);
-          setUserData(currentUser);
+          const userData = await response.json();
+          setUserData(userData);
         }
       } catch (err) {
         console.error("Error fetching user data", err);
+        navigate("/");
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [auth.user, navigate]);
 
   const handleLogout = () => {
     auth.logout();

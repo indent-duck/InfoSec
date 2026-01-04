@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
 import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/dashboard.module.css";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [stats, setStats] = useState({
     totalForms: 0,
     activeForms: 0,
@@ -18,12 +20,15 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const token = localStorage.getItem("token");
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
         
         // Fetch forms
         const formsResponse = await fetch(
           `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/forms`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${auth.user.token}` } }
         );
         
         if (formsResponse.ok) {
@@ -36,7 +41,7 @@ export default function AdminDashboard() {
           const submissionsPromises = forms.map(async (form) => {
             const submissionResponse = await fetch(
               `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/submissions/form/${form._id}`,
-              { headers: { Authorization: `Bearer ${token}` } }
+              { headers: { Authorization: `Bearer ${auth.user.token}` } }
             );
             if (submissionResponse.ok) {
               const submissions = await submissionResponse.json();
@@ -62,7 +67,7 @@ export default function AdminDashboard() {
               .map(async (form) => {
                 const submissionResponse = await fetch(
                   `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/submissions/form/${form._id}`,
-                  { headers: { Authorization: `Bearer ${token}` } }
+                  { headers: { Authorization: `Bearer ${auth.user.token}` } }
                 );
                 if (submissionResponse.ok) {
                   const submissions = await submissionResponse.json();
@@ -82,7 +87,7 @@ export default function AdminDashboard() {
     };
     
     fetchDashboardData();
-  }, []);
+  }, [auth.user, navigate]);
 
   const statsCards = [
     { title: "Total Forms", value: stats.totalForms, color: "#2729AC" },

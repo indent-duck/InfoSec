@@ -1,25 +1,30 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/viewSubmissions.module.css";
 
 export default function FormSubmissions() {
   const { formId } = useParams();
   const navigate = useNavigate();
+  const auth = useAuth();
   const [submissions, setSubmissions] = useState([]);
   const [formTitle, setFormTitle] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
 
         // Fetch form details
         const formResponse = await fetch(
           `${
             import.meta.env.VITE_API_URL || "http://localhost:5000"
           }/api/forms/${formId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${auth.user.token}` } }
         );
         if (formResponse.ok) {
           const formData = await formResponse.json();
@@ -31,7 +36,7 @@ export default function FormSubmissions() {
           `${
             import.meta.env.VITE_API_URL || "http://localhost:5000"
           }/api/submissions/form/${formId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${auth.user.token}` } }
         );
         if (submissionsResponse.ok) {
           const submissionsData = await submissionsResponse.json();
@@ -42,7 +47,7 @@ export default function FormSubmissions() {
       }
     };
     fetchData();
-  }, [formId]);
+  }, [formId, auth.user, navigate]);
 
   return (
     <div className={styles.container}>

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/viewSubmissions.module.css";
 
 export default function ViewSubmissions() {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [filter, setFilter] = useState("all");
   const [forms, setForms] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,14 +14,18 @@ export default function ViewSubmissions() {
   useEffect(() => {
     const fetchForms = async () => {
       try {
-        const token = localStorage.getItem("token");
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
+        
         const response = await fetch(
           `${
             import.meta.env.VITE_API_URL || "http://localhost:5000"
           }/api/forms`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${auth.user.token}`,
             },
           }
         );
@@ -37,17 +43,13 @@ export default function ViewSubmissions() {
                 `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/submissions/form/${form._id}`,
                 {
                   headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${auth.user.token}`,
                   },
                 }
               );
-              console.log(`Submission response for form ${form._id}:`, submissionResponse.status);
               if (submissionResponse.ok) {
                 const submissions = await submissionResponse.json();
-                console.log(`Found ${submissions.length} submissions for form ${form._id}`);
                 return { ...form, submissions: submissions.length };
-              } else {
-                console.log(`Failed to fetch submissions for form ${form._id}:`, submissionResponse.status);
               }
               return { ...form, submissions: 0 };
             } catch (err) {
@@ -63,7 +65,7 @@ export default function ViewSubmissions() {
       }
     };
     fetchForms();
-  }, []);
+  }, [auth.user, navigate]);
 
   const filteredForms =
     filter === "all"

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import AdminSidebar from "./AdminSidebar";
 import styles from "./modules/createForm.module.css";
 
 export default function CreateForm() {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -28,10 +30,13 @@ export default function CreateForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("submit clicked");
+
+    if (!auth.user || !auth.user.token) {
+      navigate("/");
+      return;
+    }
 
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-    console.log("API_URL:", API_URL);
 
     if (new Date(expiresAt) <= new Date()) {
       alert("Invalid expiration date, Please select a future date.");
@@ -47,31 +52,25 @@ export default function CreateForm() {
     };
 
     try {
-      const token = localStorage.getItem("token");
-      console.log("Token:", token ? "Present" : "Missing");
-
       const response = await fetch(`${API_URL}/api/forms`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.user.token}`,
         },
         body: JSON.stringify(payload),
       });
 
-      console.log("Response status:", response.status);
-
       if (!response.ok) {
         const errorText = await response.text();
-        console.log("Error response:", errorText);
         throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
 
       const data = await response.json();
-      console.log("Form created", data);
       navigate("/admin");
     } catch (err) {
       console.error("Error creating form: ", err);
+      alert("Error creating form. Please try again.");
     }
   };
 

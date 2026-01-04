@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import "./home.css";
 
 const Home = () => {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [tokens, setTokens] = useState(0);
   const [forms, setForms] = useState([]);
   const [userTokens, setUserTokens] = useState([]);
@@ -11,14 +13,15 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const { jwtDecode } = await import("jwt-decode");
-        const decoded = jwtDecode(token);
+        if (!auth.user || !auth.user.token) {
+          navigate("/");
+          return;
+        }
         
         // Fetch forms
         const formsResponse = await fetch(
           `${import.meta.env.VITE_API_URL}/api/forms`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${auth.user.token}` } }
         );
         if (formsResponse.ok) {
           setForms(await formsResponse.json());
@@ -26,8 +29,8 @@ const Home = () => {
         
         // Fetch user tokens
         const tokensResponse = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/tokens/user/${decoded.id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          `${import.meta.env.VITE_API_URL}/api/tokens/user/${auth.user.id}`,
+          { headers: { Authorization: `Bearer ${auth.user.token}` } }
         );
         if (tokensResponse.ok) {
           const tokenData = await tokensResponse.json();
@@ -40,7 +43,7 @@ const Home = () => {
     };
 
     fetchData();
-  }, []);
+  }, [auth.user, navigate]);
 
   const handleAnswer = (formId) => {
     navigate(`/submit/${formId}`);
