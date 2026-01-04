@@ -51,7 +51,7 @@ export default function PasswordStep() {
         return;
       }
 
-      navigate("/signup/done");
+      navigate("/signup/done", { state: { email } });
     } catch (err) {
       setError("Server error: " + err.message);
     }
