@@ -69,6 +69,23 @@ router.post("/verify-otp", async (req, res) => {
 router.post("/register", async (req, res) => {
   try {
     const { email, password, studentNumber } = req.body;
+    
+    // Password validation
+    if (password.length < 8) {
+      return res.status(400).json({ error: "Password must be at least 8 characters long" });
+    }
+    if (!/[A-Z]/.test(password)) {
+      return res.status(400).json({ error: "Password must contain at least one uppercase letter" });
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return res.status(400).json({ error: "Password must contain at least one special character" });
+    }
+    
+    // Student number validation
+    if (studentNumber.length !== 9) {
+      return res.status(400).json({ error: "Student number must be exactly 9 characters" });
+    }
+    
     const passwordHash = await bcrypt.hash(password, 10);
     const account = await Account.create({
       email,
@@ -135,7 +152,7 @@ router.post("/login", async (req, res) => {
 // Get current user profile
 router.get("/profile", authenticateToken, async (req, res) => {
   try {
-    const account = await Account.findById(req.user.id).select('-passwordHash');
+    const account = await Account.findById(req.user.id);
     if (!account) {
       return res.status(404).json({ error: "Account not found" });
     }

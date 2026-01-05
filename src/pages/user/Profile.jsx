@@ -65,7 +65,7 @@ const Profile = () => {
           <h3>Personal Information</h3>
           <div className="info-grid">
             <div className="info-field">
-              <label>Full Name</label>
+              <label>Student Number</label>
               <input type="text" value={userData?.studentNumber || ""} readOnly />
             </div>
             <div className="info-field">
