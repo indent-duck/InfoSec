@@ -93,7 +93,7 @@ const Home = () => {
                       {isExpired ? "Expired" : form.status === "closed" ? "Closed" : "Open"}
                     </td>
                     <td>
-                      {!isExpired && hasToken ? (
+                      {!isExpired && form.status !== "closed" && hasToken ? (
                         <button
                           className="answer-btn"
                           onClick={() => handleAnswer(form._id)}
@@ -102,7 +102,7 @@ const Home = () => {
                         </button>
                       ) : (
                         <span className="submitted">
-                          {isExpired ? "Expired" : "Submitted"}
+                          {isExpired ? "Expired" : form.status === "closed" ? "Closed" : "Submitted"}
                         </span>
                       )}
                     </td>

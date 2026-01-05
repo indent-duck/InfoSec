@@ -2,8 +2,10 @@ import express from "express";
 import Account from "../models/Account.js";
 import Token from "../models/Token.js";
 import OTP from "../models/OTP.js";
+import Form from "../models/Form.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { sendOTPEmail } from "../utils/emailService.js";
 import { authenticateToken } from "../middleware/AuthMiddleware.js";
 
@@ -74,8 +76,37 @@ router.post("/register", async (req, res) => {
       studentNumber,
       role: "user",
     });
+    
+    console.log("New account created:", account._id);
+    
+    // Generate tokens for all existing open forms
+    const openForms = await Form.find({ 
+      status: { $ne: "closed" },
+      expiresAt: { $gt: new Date() }
+    });
+    
+    console.log("Found open forms:", openForms.length);
+    
+    const tokens = [];
+    for (const form of openForms) {
+      const tokenString = crypto.randomBytes(32).toString("hex");
+      tokens.push({
+        userId: account._id,
+        formId: form._id,
+        token: tokenString,
+      });
+    }
+    
+    console.log("Tokens to create:", tokens.length);
+    
+    if (tokens.length > 0) {
+      await Token.insertMany(tokens);
+      console.log("Tokens created successfully");
+    }
+    
     res.status(201).json(account);
   } catch (err) {
+    console.error("Registration error:", err);
     res.status(400).json({ error: err.message });
   }
 });
