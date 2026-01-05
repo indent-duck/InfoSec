@@ -51,6 +51,8 @@ export default function PasswordStep() {
         return;
       }
 
+      // Store password for auto-login in DoneStep
+      sessionStorage.setItem('signupPassword', password);
       navigate("/signup/done", { state: { email } });
     } catch (err) {
       setError("Server error: " + err.message);
