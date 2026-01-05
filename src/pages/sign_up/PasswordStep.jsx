@@ -86,9 +86,14 @@ export default function PasswordStep() {
                 type="text"
                 placeholder="Enter your student number"
                 value={studentNumber}
-                onChange={(e) => setStudentNumber(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, '');
+                  setStudentNumber(value);
+                }}
                 maxLength={9}
                 minLength={9}
+                pattern="\d{9}"
+                title="Student number must be exactly 9 digits"
                 required
               />
             </div>
@@ -101,8 +106,8 @@ export default function PasswordStep() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 minLength={8}
-                pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?':{}|<>]).{8,}$"
-                title="Password must be at least 8 characters with one uppercase letter and one special character"
+                pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?':{}|<>]).{8,}$"
+                title="Password must be at least 8 characters with one uppercase letter, one digit, and one special character"
                 required
               />
             </div>

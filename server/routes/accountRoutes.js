@@ -77,6 +77,9 @@ router.post("/register", async (req, res) => {
     if (!/[A-Z]/.test(password)) {
       return res.status(400).json({ error: "Password must contain at least one uppercase letter" });
     }
+    if (!/[0-9]/.test(password)) {
+      return res.status(400).json({ error: "Password must contain at least one digit" });
+    }
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
       return res.status(400).json({ error: "Password must contain at least one special character" });
     }
@@ -84,6 +87,9 @@ router.post("/register", async (req, res) => {
     // Student number validation
     if (studentNumber.length !== 9) {
       return res.status(400).json({ error: "Student number must be exactly 9 characters" });
+    }
+    if (!/^\d{9}$/.test(studentNumber)) {
+      return res.status(400).json({ error: "Student number must contain only digits" });
     }
     
     const passwordHash = await bcrypt.hash(password, 10);
